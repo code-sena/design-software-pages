@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gobernanza · Sistema de Horarios SENA</title>
+<style>
+  :root{
+    --bg:#0e1726; --panel:#152238; --panel2:#1b2b47; --line:#2b3d5e;
+    --tx:#e6edf7; --mut:#9db0cc; --acc:#3b82f6; --grn:#22c55e; --amb:#f59e0b;
+    --pur:#8b5cf6; --red:#ef4444; --tl:#14b8a6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0b1220,#0e1726);color:var(--tx);
+    font:15px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 60px}
+  header.top{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+  .shield{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#134e4a,#22c55e);
+    display:grid;place-items:center;font-size:26px;box-shadow:0 6px 20px rgba(34,197,94,.25)}
+  h1{font-size:26px;margin:0;letter-spacing:.2px}
+  .sub{color:var(--mut);font-size:14px;margin-top:2px}
+  .stamp{margin-left:auto;text-align:right;color:var(--mut);font-size:12px;
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+  .stamp b{color:var(--grn)}
+  h2{font-size:15px;text-transform:uppercase;letter-spacing:1.5px;color:var(--mut);
+    margin:34px 0 12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+  .grid{display:grid;gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  /* jerarquía */
+  .tier{display:flex;flex-direction:column;align-items:center;gap:0}
+  .node{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 18px;
+    text-align:center;min-width:260px;max-width:100%}
+  .node .role{font-weight:700}
+  .node .who{color:var(--mut);font-size:13px;margin-top:2px}
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;margin-top:7px}
+  .b-admin{background:rgba(59,130,246,.16);color:#93c5fd;border:1px solid #3b82f6}
+  .b-write{background:rgba(34,197,94,.14);color:#86efac;border:1px solid #22c55e}
+  .b-read{background:rgba(148,163,184,.14);color:#cbd5e1;border:1px solid #64748b}
+  .b-bypass{background:rgba(245,158,11,.14);color:#fcd34d;border:1px solid #f59e0b}
+  .conn{width:2px;height:20px;background:var(--line)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:620px}
+  @media(max-width:620px){.two{grid-template-columns:1fr}}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--mut);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  td code,.hl{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:12.5px}
+  .ok{color:var(--grn)} .no{color:var(--red)} .mid{color:var(--amb)}
+  .pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);
+    background:var(--panel2);color:var(--mut);margin:2px 3px 0 0}
+  .note{color:var(--mut);font-size:12.5px;margin-top:8px}
+  footer{margin-top:40px;color:var(--mut);font-size:12px;border-top:1px solid var(--line);padding-top:16px}
+  .chip{font-size:11px;color:var(--mut)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="shield">🛡️</div>
+    <div>
+      <h1>Gobernanza del Proyecto</h1>
+      <div class="sub">Sistema de Horarios SENA · organización <code>code-sena</code> · roles, jerarquía y permisos reales</div>
+    </div>
+    <div class="stamp">Estado a la fecha<br><b>2026-08-14</b><br><span class="chip">fuente: GitHub org code-sena</span></div>
+  </header>
+
+  <!-- JERARQUÍA -->
+  <h2>Jerarquía de seguridad</h2>
+  <div class="tier">
+    <div class="node">
+      <div class="role">Product Owner</div>
+      <div class="who">Instructor Jesús Ariel · <code>ariel5253</code></div>
+      <div><span class="badge b-admin">ADMIN</span></div>
+    </div>
+    <div class="conn"></div>
+    <div class="node">
+      <div class="role">Arquitectos / Coordinadores</div>
+      <div class="who">Andrey Gómez · <code>Andrey31072</code> &nbsp;·&nbsp; Juan Pablo · <code>Juan282007</code></div>
+      <div><span class="badge b-admin">ADMIN</span></div>
+    </div>
+    <div class="conn"></div>
+    <div class="two">
+      <div class="node">
+        <div class="role">Líder Backend</div>
+        <div class="who">María · <code>MariaOyola</code><br>Daniel · <code>daniel2004-lsd</code></div>
+        <div><span class="badge b-write">WRITE</span></div>
+      </div>
+      <div class="node">
+        <div class="role">Líder Frontend</div>
+        <div class="who">Yohan · <code>Johan-RC</code></div>
+        <div><span class="badge b-write">WRITE</span></div>
+      </div>
+    </div>
+    <div class="conn"></div>
+    <div class="node" style="max-width:640px">
+      <div class="role">Líderes Técnicos</div>
+      <div class="who" style="margin-top:6px">
+        <span class="pill">Natalia · nataliachala1</span><span class="pill">Amaya · joseamaya009</span>
+        <span class="pill">Nicolas · Nicolasruiz918</span><span class="pill">Acero · JohanAceroSalazar</span>
+        <span class="pill">Palma · CristianJPalma</span><span class="pill">Danna · Dannabarrios</span>
+        <span class="pill">Yerson · yersonct</span><span class="pill">Freinnier · FreinierCardona</span>
+      </div>
+      <div><span class="badge b-write">WRITE</span></div>
+    </div>
+    <div class="conn"></div>
+    <div class="node" style="max-width:640px">
+      <div class="role">Equipos de Desarrollo</div>
+      <div class="who">Read en todos los repos · Write en los repos asignados</div>
+      <div><span class="badge b-read">READ</span> <span class="badge b-write">+ WRITE puntual</span></div>
+    </div>
+  </div>
+
+  <!-- MATRIZ -->
+  <h2>Matriz de permisos por rol</h2>
+  <div class="card" style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Acción</th><th>PO</th><th>Coord.</th><th>Líderes</th><th>Devs</th></tr></thead>
+      <tbody>
+        <tr><td>Consultar / crear ramas / commits / PR</td><td class="ok">✔</td><td class="ok">✔</td><td class="ok">✔</td><td class="ok">✔</td></tr>
+        <tr><td>Aprobar PR (técnico)</td><td class="ok">✔</td><td class="ok">✔</td><td class="ok">✔</td><td class="mid">según política</td></tr>
+        <tr><td>Promover entre ambientes (cherry-pick / release)</td><td class="ok">✔</td><td class="ok">✔</td><td class="ok">✔</td><td class="no">✘</td></tr>
+        <tr><td>Administrar repo / permisos / protección</td><td class="ok">✔</td><td class="ok">✔</td><td class="no">✘</td><td class="no">✘</td></tr>
+        <tr><td>Push directo a ramas padre</td><td class="mid">restringido</td><td class="mid">restringido</td><td class="no">✘</td><td class="no">✘</td></tr>
+      </tbody>
+    </table>
+    <div class="note">Ramas padre protegidas: <code>develop</code> · <code>qa</code> · <code>staging</code> · <code>main</code>. Todo cambio entra por Pull Request desde rama hija.</div>
+  </div>
+
+  <!-- TEAMS -->
+  <h2>Equipos de GitHub (permisos reales)</h2>
+  <div class="card" style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Team</th><th>Nivel</th><th>Miembros</th><th>Propósito</th></tr></thead>
+      <tbody>
+        <tr><td><code>design-software-develop</code></td><td><span class="badge b-admin">ADMIN</span></td><td>ariel5253, Andrey31072, Juan282007</td><td>Arquitectos / coordinadores</td></tr>
+        <tr><td><code>design-software-qa</code></td><td><span class="badge b-admin">ADMIN</span></td><td>ariel5253, Andrey31072, Juan282007</td><td>Admin QA</td></tr>
+        <tr><td><code>design-software</code></td><td><span class="badge b-write">WRITE</span></td><td>+ javierpintod, cjsarasty456, Karol-Daniela-Correa-T</td><td>Equipo del proyecto (least-privilege)</td></tr>
+        <tr><td><code>design-software-bypass</code></td><td><span class="badge b-bypass">BYPASS · PR</span></td><td>ariel5253</td><td>Excepción controlada (mergea sin approvals, solo vía PR)</td></tr>
+      </tbody>
+    </table>
+    <div class="note">Los líderes técnicos y desarrolladores acceden como <b>colaboradores directos</b> por repo (Read base + Write en los suyos), no vía team.</div>
+  </div>
+
+  <!-- OWNERS -->
+  <h2>Owners por repositorio (CODEOWNERS)</h2>
+  <div class="card" style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Repositorio</th><th>Owners (code owners)</th></tr></thead>
+      <tbody>
+        <tr><td><code>iam-db</code></td><td>nataliachala1, Karendaniela09, Kevin-Stiven-Lopez-Amaya404</td></tr>
+        <tr><td><code>reference-data-db</code></td><td>valerysinai, daniel2004-lsd, pemarival, MariaOyola, vamaripe</td></tr>
+        <tr><td><code>academic-management-db</code></td><td>yersonct</td></tr>
+        <tr><td><code>training-environment-db</code></td><td>vanessaperdomo, sharithsaavedra1, Dannabarrios</td></tr>
+        <tr><td><code>scheduling-db</code></td><td>joseamaya009, CristianJPalma, JuanCarlosJC-20, Dannabarrios</td></tr>
+        <tr><td><code>actors-db</code></td><td>joseamaya009, EmersonMolano, joseale879</td></tr>
+        <tr><td><code>document-db</code></td><td>JohanAceroSalazar</td></tr>
+        <tr><td><code>monitoring-db</code></td><td>jsgh1, Nicolasruiz918, JhonCamiloSuaza</td></tr>
+        <tr><td><code>audit-db</code></td><td>joseamaya009, yersonct, CristianJPalma, Nicolasruiz918, nataliachala1, Dannabarrios, FreinierCardona…</td></tr>
+        <tr><td><code>docs</code> · <code>docker-infra</code></td><td>@code-sena/design-software-develop (arquitectos)</td></tr>
+      </tbody>
+    </table>
+    <div class="note">Catch-all de todos los repos: <code>@code-sena/design-software-develop</code> (arquitectos). Un PR requiere aprobación de al menos un code owner.</div>
+  </div>
+
+  <!-- PROTECCIÓN -->
+  <h2>Protección de ramas (12 repos)</h2>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+    <div class="card"><b class="ok">PR obligatorio</b><div class="note">sin push directo</div></div>
+    <div class="card"><b class="ok">2 aprobaciones</b><div class="note">técnica + admin</div></div>
+    <div class="card"><b class="ok">Code-owner review</b><div class="note">CODEOWNERS activo</div></div>
+    <div class="card"><b class="ok">Sin force-push</b><div class="note">y sin borrado de rama</div></div>
+    <div class="card"><b class="ok">Conversaciones resueltas</b><div class="note">antes del merge</div></div>
+    <div class="card"><b class="mid">Bypass</b><div class="note">solo ariel5253, vía PR</div></div>
+  </div>
+  <div class="note">Regla <code>protect-parent-branches</code> activa sobre <code>develop/qa/staging/main</code> en los 12 repos <code>design-software-*</code>. Los 4 ambientes están <b class="ok">ecualizados</b> (mismo contenido).</div>
+
+  <footer>
+    Generado a partir del estado real de la organización <code>code-sena</code> · última actualización manual: <b>2026-08-14</b>.<br>
+    Complementa la política formal en <code>design-software-docs/00-governance/security-policy.md</code>.
+    Para mantenerlo al día automáticamente puede conectarse un GitHub Action que regenere esta página desde la API.
+  </footer>
+
+</div>
+</body>
+</html>
