@@ -2,7 +2,7 @@
   const M = window.Mockup = window.Mockup || {};
   const icon = (...args) => M.icon(...args);
   const statusConfig = {
-    DRAFT:['Borrador','status-draft','circle'], UNDER_REVIEW:['En revisión','status-review','warning'], PUBLISHED:['Publicado','status-published','check'], ARCHIVED:['Archivado','status-neutral','lock'],
+    DRAFT:['Borrador','status-draft','circle'], UNDER_REVIEW:['En revisión','status-review','warning'], PUBLISHED:['Publicado','status-published','check'], ARCHIVED:['Archivado','status-neutral','lock'], OBSOLETE:['Obsoleta','status-neutral','lock'],
     CONFLICT:['Pendiente','status-conflict','warning'], RESOLVED:['Resuelto','status-success','check'], ACTIVE:['Activo','status-success','check'], INACTIVE:['Inactivo','status-neutral','lock'],
     AVAILABLE:['Disponible','status-success','check'], UNAVAILABLE:['No disponible','status-danger','lock'], EXCEPTION:['Con excepción','status-warning','warning'], CANCELLED:['Cancelada','status-neutral','x'],
     INDUCTION:['Inducción','status-info','info'], EXECUTION:['Ejecución','status-success','check'], PRODUCTIVE_STAGE:['Etapa productiva','status-warning','clock'], COMPLETED:['Finalizada','status-neutral','check'],
@@ -15,6 +15,13 @@
     status(value, labelOverride) {
       const [label, cls, ico] = statusConfig[value] || [labelOverride || value,'status-neutral','info'];
       return `<span class="status-badge ${cls}">${icon(ico)}${labelOverride || label}</span>`;
+    },
+    // G2 · badges de notificación accionable: no-leída + prioridad + categoría.
+    notifBadges(n) {
+      const pr = {HIGH:['status-danger','Alta'],NORMAL:['status-info','Normal'],LOW:['status-neutral','Baja']}[n.priority] || ['status-neutral', n.priority||'—'];
+      const cat = {SCHEDULE_PUBLISHED:'Horario publicado',SCHEDULE_CHANGED:'Cambio de horario',CONFLICT:'Conflicto',INSTRUCTOR_EXCEPTION:'Novedad instructor',GENERAL:'General'}[n.category] || n.category || 'General';
+      const nueva = n.isRead ? '' : `<span class="status-badge status-info">${icon('circle')}Nueva</span>`;
+      return `${nueva}<span class="status-badge ${pr[0]}">${icon('warning')}Prioridad: ${pr[1]}</span><span class="status-badge status-neutral">${icon('bell')}${cat}</span>`;
     },
     pageHeader(title, subtitle='', primary=null, back=null) {
       return `${back ? `<a class="back-link" href="#${back.href}">${icon('arrowLeft')}${back.label}</a>` : ''}
