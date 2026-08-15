@@ -6,6 +6,12 @@
   const actionCell = (label, href='#') => `<a class="btn btn-secondary btn-sm" href="${href}">${label}</a>`;
   const stateView = (ctx, entity='registros') => ctx.state && ctx.state !== 'normal' ? C().state(ctx.state, entity) : null;
 
+  // G1 · helpers de conflicto (5 tipos canónicos + severidad + bloqueo de publicación)
+  const CONFLICT_ICON = {INSTRUCTOR_DOUBLE_BOOKED:'users',ENVIRONMENT_DOUBLE_BOOKED:'building',SESSIONS_OVERLAP:'calendar',ENVIRONMENT_MAINTENANCE:'settings',INSTRUCTOR_UNAVAILABLE:'clock',INSTRUCTOR_TRAVEL_CONFLICT:'activity'};
+  const confIcon = t => icon(CONFLICT_ICON[t]||'warning');
+  const sevBadge = s => { const m={HIGH:['status-danger','Alta'],MEDIUM:['status-warning','Media'],LOW:['status-neutral','Baja']}[s]||['status-neutral',s]; return `<span class="status-badge ${m[0]}">${icon('warning')}Severidad: ${m[1]}</span>`; };
+  const blockBadge = b => b?`<span class="status-badge status-conflict">${icon('lock')}Bloquea publicación</span>`:`<span class="status-badge status-neutral">${icon('info')}No bloquea</span>`;
+
   function scheduleColumns(readonly=false) {
     const cols=[
       {label:'Día',key:'day'},{label:'Franja horaria',key:'slot'},{label:'Fecha',key:'date'},
@@ -23,8 +29,8 @@
     const drafts=D().schedules.filter(x=>x.status==='DRAFT').slice(0,3);
     return `${C().pageHeader('Inicio','', {label:'+ Nuevo horario',href:'/horarios/nuevo',icon:'plus'})}
       <div class="dashboard-layout">
-        <section class="panel conflict-panel"><header class="panel-header"><div><h2 class="panel-title">${icon('warning')} Conflictos pendientes (4)</h2><p class="panel-subtitle">Requieren atención antes de publicar los horarios afectados.</p></div></header>
-        <div>${conflicts.map(x=>`<article class="conflict-row"><span class="conflict-icon">${icon(x.type==='ENVIRONMENT_DOUBLE_BOOKED'?'building':x.type==='SESSIONS_OVERLAP'?'calendar':'users')}</span><div><h3>${x.title}</h3><p>${x.schedule}</p></div><time>${x.date}</time><a class="btn btn-link btn-sm" href="#/horarios/sch-02/conflictos">Ver panel ${icon('chevronRight')}</a></article>`).join('')}</div><footer class="panel-footer">Mostrando 3 de 4 · <a href="#/horarios/sch-02/conflictos">Ver todos</a></footer></section>
+        <section class="panel conflict-panel"><header class="panel-header"><div><h2 class="panel-title">${icon('warning')} Conflictos pendientes (5)</h2><p class="panel-subtitle">Requieren atención antes de publicar los horarios afectados.</p></div></header>
+        <div>${conflicts.map(x=>`<article class="conflict-row"><span class="conflict-icon">${icon(x.type==='ENVIRONMENT_DOUBLE_BOOKED'?'building':x.type==='SESSIONS_OVERLAP'?'calendar':'users')}</span><div><h3>${x.title}</h3><p>${x.schedule}</p></div><time>${x.date}</time><a class="btn btn-link btn-sm" href="#/horarios/sch-02/conflictos">Ver panel ${icon('chevronRight')}</a></article>`).join('')}</div><footer class="panel-footer">Mostrando 3 de 5 · <a href="#/horarios/sch-02/conflictos">Ver todos</a></footer></section>
         <section class="kpi-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">${C().kpi('Fichas activas','12','<a href="#/fichas">Ver todos</a>')}${C().kpi('Horarios en borrador','3','<a href="#/horarios">Ver todos</a>')}</section>
         <section class="panel"><header class="panel-header"><div><h2 class="panel-title">Horarios recientes en borrador</h2></div></header>
           ${C().table([
@@ -96,9 +102,9 @@
     const state=stateView(ctx,'conflictos'); if(state) return `${C().pageHeader('Panel de conflictos','',null,{label:'Volver al horario',href:'/horarios/sch-02'})}${state}`;
     const modal=ctx.query.get('modal');
     let html=`${C().pageHeader('Panel de conflictos','Resuelve los conflictos antes de publicar.',null,{label:'Volver al horario',href:'/horarios/sch-02'})}
-      <section class="panel">${C().tabs(['Este horario','Todo mi centro'],0)}<div class="panel-body">${C().filters([{label:'Tipo',options:['Todos','Instructor doble-asignado','Ambiente doble-asignado','Sesiones solapadas']},{label:'Estado',options:['Pendiente','Resuelto']},{label:'Detectado desde',type:'date'}])}
-      <div class="conflict-cards">${D().conflicts.map(x=>`<article class="conflict-card ${x.resolved?'resolved':''}"><span class="conflict-icon">${icon(x.type==='ENVIRONMENT_DOUBLE_BOOKED'?'building':x.type==='SESSIONS_OVERLAP'?'calendar':'users')}</span><div><h3 style="margin:0 0 5px;color:${x.resolved?'var(--color-text)':'var(--color-danger)'}">${x.title}</h3><p>${x.description}</p><small>${x.schedule} · Detectado el ${x.date}</small><div style="margin-top:10px">${C().status(x.resolved?'RESOLVED':'CONFLICT')}</div></div>${x.resolved?'':`<button class="btn btn-danger-subtle" data-open-modal="resolve">Marcar como resuelto</button>`}</article>`).join('')}</div></div>${C().pagination(4,1,4,1,10)}</section>`;
-    if(modal==='resolve') html+=C().modal('Resolver conflicto',`<div style="text-align:center;margin-bottom:20px"><span class="state-icon" style="margin-inline:auto;background:var(--color-danger-surface);color:var(--color-danger)">${icon('users')}</span></div><p><strong>El instructor Juan Pérez tiene dos sesiones que se solapan el 10/08/2026 de 07:00 a 10:00.</strong></p>${C().details([['Sesión 1','Ficha 2874412 · Laboratorio A-204'],['Sesión 2','Ficha 3011550 · Aula B-105'],['Detectado','06/08/2026']])}<div class="alert alert-success" style="margin-top:20px">${icon('check')}Al resolverlo, este horario podrá publicarse.</div>`,`<button class="btn btn-secondary" data-close-modal>Cancelar</button><button class="btn btn-primary" data-navigate="/horarios/sch-02?modal=publish&resolved=1">Confirmar resolución</button>`);
+      <section class="panel">${C().tabs(['Este horario','Todo mi centro'],0)}<div class="panel-body">${C().filters([{label:'Tipo',options:['Todos','Instructor doble-asignado','Ambiente doble-asignado','Sesiones solapadas','Ambiente en mantenimiento','Instructor no disponible','Traslado entre sedes']},{label:'Severidad',options:['Todas','Alta','Media','Baja']},{label:'Estado',options:['Pendiente','Resuelto']},{label:'Detectado desde',type:'date'}])}
+      <div class="conflict-cards">${D().conflicts.map(x=>`<article class="conflict-card ${x.resolved?'resolved':''}"><span class="conflict-icon">${confIcon(x.type)}</span><div><h3 style="margin:0 0 5px;color:${x.resolved?'var(--color-text)':'var(--color-danger)'}">${x.title}</h3><p>${x.description}</p><small>${x.schedule} · Detectado el ${x.date}</small><div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">${C().status(x.resolved?'RESOLVED':'CONFLICT')}${sevBadge(x.severity)}${blockBadge(x.isBlocking)}</div>${x.resolved?`<div class="alert alert-success" style="margin-top:12px">${icon('check')}<div><strong>Resuelto por ${x.resolvedBy}</strong> · ${x.resolvedAt}<br>${x.resolutionReason}</div></div>`:''}</div>${x.resolved?'':`<button class="btn btn-danger-subtle" data-open-modal="resolve">Resolver…</button>`}</article>`).join('')}</div></div>${C().pagination(6,1,6,1,10)}</section>`;
+    if(modal==='resolve') html+=C().modal('Resolver conflicto',`<div style="text-align:center;margin-bottom:20px"><span class="state-icon" style="margin-inline:auto;background:var(--color-danger-surface);color:var(--color-danger)">${icon('users')}</span></div><p><strong>El instructor Juan Pérez tiene dos sesiones que se solapan el 10/08/2026 de 07:00 a 10:00.</strong></p>${C().details([['Sesión 1','Ficha 2874412 · Laboratorio A-204'],['Sesión 2','Ficha 3011550 · Aula B-105'],['Detectado','06/08/2026'],['Severidad','Alta'],['Bloquea publicación','Sí']])}<div class="form-field full" style="margin-top:16px"><label>Justificación de la resolución <span style="color:var(--color-danger)">*</span></label><textarea required placeholder="Describe cómo se resolvió (p. ej.: se reasignó la segunda sesión a otro instructor)."></textarea><div class="field-hint">${icon('info')}La resolución queda auditada con tu usuario y la fecha. La justificación es obligatoria.</div></div>`,`<button class="btn btn-secondary" data-close-modal>Cancelar</button><button class="btn btn-primary" data-navigate="/horarios/sch-02?modal=publish&resolved=1">Confirmar resolución</button>`);
     return html;
   };
 
@@ -111,14 +117,15 @@
   };
 
   function sessionDrawer(mode='instructor') {
-    return `<div class="modal-backdrop" data-modal-backdrop><aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title"><header class="drawer-header"><h2 id="drawer-title">Detalle de sesión</h2><button class="icon-btn" data-close-modal>${icon('x')}</button></header><div class="drawer-body"><div class="alert alert-info" style="margin-bottom:20px">${icon('calendar')}Lunes 10 de agosto · 07:00–10:00</div>${C().details([['Ficha','2874412'],['Programa','Análisis y Desarrollo de Software'],['Competencia','Desarrollar software según requerimientos'],['Ambiente','Laboratorio A-204'],['Instructor','Juan Pérez'],['Estado','Activa']])}<h3>Notas</h3><p>Traer equipo portátil y acceso al repositorio del proyecto.</p>${mode==='learner'?'<a class="btn btn-secondary" href="#/mi-horario">Volver a Mi horario</a>':''}</div></aside></div>`;
+    return `<div class="modal-backdrop" data-modal-backdrop><aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title"><header class="drawer-header"><h2 id="drawer-title">Detalle de sesión</h2><button class="icon-btn" data-close-modal>${icon('x')}</button></header><div class="drawer-body"><div class="alert alert-info" style="margin-bottom:20px">${icon('calendar')}Lunes 10 de agosto · 07:00–10:00</div>${C().details([['Ficha','2874412'],['Programa','Análisis y Desarrollo de Software'],['Competencia','Desarrollar software según requerimientos'],['Ambiente','Laboratorio A-204'],['Instructor','Juan Pérez'],['Estado','Activa']])}<h3>Notas</h3><p>Traer equipo portátil y acceso al repositorio del proyecto.</p>${mode==='instructor'?`<h3>Ejecución de la sesión</h3><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">${C().status('PENDING','Pendiente')}<span style="color:var(--color-text-muted)">Marca el resultado tras la clase</span></div><div class="table-actions"><button class="btn btn-primary btn-sm">${icon('check')}Marcar ejecutada</button><button class="btn btn-secondary btn-sm">${icon('x')}No ejecutada</button></div>`:''}${mode==='learner'?'<a class="btn btn-secondary" href="#/mi-horario">Volver a Mi horario</a>':''}</div></aside></div>`;
   }
 
   M.screens.learnerSchedule = (ctx) => {
-    // TODO GAP B2: SCH_VIEW_OWN no está cableado en scheduling.yaml; datos mock acotados a la ficha.
+    // G5 · SCH_VIEW_OWN (scope OWN_FICHA_AS_LEARNER): la vista deriva del usuario autenticado → su matrícula → su ficha.
+    //       B2 resuelto en diseño (feature+scope); falta cablear el scope OWN en scheduling.yaml.
     const state=stateView(ctx,'clases publicadas'); if(state) return `${C().pageHeader('Mi horario','Ficha 2874412 · Semana del 10 al 14 de agosto')}${state}`;
     const days=[['Lunes 10','07:00–10:00','Desarrollo de software','Laboratorio A-204','Juan Pérez','ses-01'],['Martes 11','10:00–13:00','Modelado de bases de datos','Aula B-105','Carolina Rojas','ses-02'],['Miércoles 12','13:00–16:00','Servicios web','Laboratorio A-204','Juan Pérez','ses-03']];
-    return `${C().pageHeader('Mi horario','Ficha 2874412 · Semana del 10 al 14 de agosto de 2026')}<div class="notifications-list">${days.map(d=>`<article class="card notification-card"><span class="conflict-icon" style="background:var(--color-brand-soft);color:var(--color-brand)">${icon('calendar')}</span><div><h3>${d[0]} · ${d[1]}</h3><p><strong>${d[2]}</strong></p><p>${d[3]} · ${d[4]}</p></div><a class="btn btn-secondary btn-sm" href="#/mi-horario/sesiones/${d[5]}">Ver detalle</a></article>`).join('')}</div>`;
+    return `${C().pageHeader('Mi horario','Ficha 2874412 · Semana del 10 al 14 de agosto de 2026')}<div class="alert alert-info" style="margin-bottom:16px">${icon('lock')}<div>Ves únicamente <strong>tu ficha (2874412)</strong> — acceso propio <code>SCH_VIEW_OWN</code>. No puedes consultar horarios de otras fichas.</div></div><div class="notifications-list">${days.map(d=>`<article class="card notification-card"><span class="conflict-icon" style="background:var(--color-brand-soft);color:var(--color-brand)">${icon('calendar')}</span><div><h3>${d[0]} · ${d[1]}</h3><p><strong>${d[2]}</strong></p><p>${d[3]} · ${d[4]}</p></div><a class="btn btn-secondary btn-sm" href="#/mi-horario/sesiones/${d[5]}">Ver detalle</a></article>`).join('')}</div>`;
   };
 
   M.screens.learnerClassDetail = (ctx) => {
@@ -128,15 +135,15 @@
 
   M.screens.paramTimeSlots = (ctx) => {
     const state=stateView(ctx,'franjas horarias'); if(state) return `${C().pageHeader('Parametrización — Jornadas')}${state}`;
-    const shiftLabel={DAY:'Diurna',NIGTH:'Nocturna',MIXED:'Mixta'};
+    const shiftLabel={DAY:'Diurna',NIGHT:'Nocturna',MIXED:'Mixta'};
     const dayLabel={1:'Lunes',2:'Martes',3:'Miércoles',4:'Jueves',5:'Viernes',6:'Sábado',7:'Domingo'};
     const slots=[
       {name:'Mañana 1',day_of_week:1,start:'07:00',end:'10:00',shift:'DAY'},
       {name:'Mañana 2',day_of_week:1,start:'10:00',end:'13:00',shift:'DAY'},
       {name:'Tarde 1',day_of_week:1,start:'13:00',end:'16:00',shift:'DAY'},
       {name:'Tarde 2',day_of_week:2,start:'16:00',end:'18:00',shift:'DAY'},
-      {name:'Noche 1',day_of_week:2,start:'18:00',end:'20:00',shift:'NIGTH'},
-      {name:'Noche 2',day_of_week:3,start:'20:00',end:'22:00',shift:'NIGTH'},
+      {name:'Noche 1',day_of_week:2,start:'18:00',end:'20:00',shift:'NIGHT'},
+      {name:'Noche 2',day_of_week:3,start:'20:00',end:'22:00',shift:'NIGHT'},
       {name:'Mañana sabatina',day_of_week:6,start:'07:00',end:'12:00',shift:'MIXED'},
       {name:'Tarde sabatina',day_of_week:6,start:'12:00',end:'17:00',shift:'MIXED'},
       {name:'Mañana 3',day_of_week:4,start:'07:00',end:'10:00',shift:'DAY'},
@@ -154,7 +161,7 @@
     let html=`${C().pageHeader('Parametrización — Jornadas / franjas horarias','Franjas que las sesiones de clase ocupan al construir un horario. Configúrelas por jornada (mañana/tarde/noche) antes de crear horarios.',null,{href:'/admin/parametrizacion',label:'Parametrización'})}
       <section class="panel"><div class="panel-header" style="padding:16px 20px"><div><h2 class="panel-title">Franjas horarias</h2><p class="panel-subtitle">Cada franja define día, hora de inicio, hora de fin y jornada.</p></div><button class="btn btn-primary" data-open-modal="edit">${icon('plus')}Nueva franja</button></div>${C().table(cols,slots,{caption:'Franjas horarias',total:12,start:1,end:slots.length,pageSize:10})}</section>`;
     if(ctx.query.get('modal')==='edit') html+=C().modal('Nueva / editar franja',
-      `<div class="form-grid"><div class="form-field"><label>Nombre</label><input value="Mañana 1"></div><div class="form-field"><label>Día de la semana</label><select><option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option><option>Sábado</option><option>Domingo</option></select></div><div class="form-field"><label>Jornada</label><select><option value="DAY">Diurna</option><option value="NIGTH">Nocturna</option><option value="MIXED">Mixta</option></select></div><div class="form-field"><label>Hora inicio</label><input type="time" value="07:00"></div><div class="form-field"><label>Hora fin</label><input type="time" value="10:00"></div><div class="form-field full"><div class="field-hint">${icon('warning')}La hora de inicio debe ser menor que la hora de fin.</div></div></div>`,
+      `<div class="form-grid"><div class="form-field"><label>Nombre</label><input value="Mañana 1"></div><div class="form-field"><label>Día de la semana</label><select><option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option><option>Sábado</option><option>Domingo</option></select></div><div class="form-field"><label>Jornada</label><select><option value="DAY">Diurna</option><option value="NIGHT">Nocturna</option><option value="MIXED">Mixta</option></select></div><div class="form-field"><label>Hora inicio</label><input type="time" value="07:00"></div><div class="form-field"><label>Hora fin</label><input type="time" value="10:00"></div><div class="form-field full"><div class="field-hint">${icon('warning')}La hora de inicio debe ser menor que la hora de fin.</div></div></div>`,
       `<button class="btn btn-secondary" data-close-modal>Cancelar</button><button class="btn btn-primary">${icon('check')}Guardar</button>`);
     return html;
   };

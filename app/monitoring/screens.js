@@ -22,7 +22,7 @@
 
   M.screens.notificationsList=(ctx)=>{
     const state=stateView(ctx,'notificaciones'); if(state)return `${C().pageHeader('Notificaciones')}${state}`;
-    return `${C().pageHeader('Notificaciones','Avisos enviados a tu usuario.')}<section class="notifications-list">${D().notifications.map(n=>`<a class="card notification-card" href="#/notificaciones/${n.id}" style="text-decoration:none;color:inherit"><span class="conflict-icon" style="background:var(--color-brand-soft);color:var(--color-brand)">${icon('bell')}</span><div><h3>${n.subject}</h3><p>${n.summary}</p><time>${n.date}</time></div>${C().status(n.status)}</a>`).join('')}</section>${C().pagination(18,1,5,1,10)}`;
+    return `${C().pageHeader('Notificaciones','Avisos enviados a tu usuario.')}<section class="notifications-list">${D().notifications.map(n=>`<a class="card notification-card" href="#${n.deepLink||('/notificaciones/'+n.id)}" style="text-decoration:none;color:inherit;${n.isRead?'opacity:.62':''}"><span class="conflict-icon" style="background:var(--color-brand-soft);color:var(--color-brand)">${icon('bell')}</span><div><h3>${n.subject}</h3><p>${n.summary}</p><div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0">${C().notifBadges(n)}</div><time>${n.date}</time></div>${C().status(n.status)}</a>`).join('')}</section>${C().pagination(18,1,5,1,10)}`;
   };
   M.screens.notificationDetail=(ctx)=>{
     const state=stateView(ctx,'notificación'); if(state)return `${C().pageHeader('Detalle de notificación','',null,{label:'Volver a Notificaciones',href:'/notificaciones'})}${state}`;

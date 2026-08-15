@@ -41,11 +41,15 @@
       { id:'ses-04', day:'Jueves', slot:'07:00–10:00', date:'13/08/2026', competency:'Aplicar prácticas de calidad', instructor:'Diego Castro', environment:'Aula C-208', status:'ACTIVE' },
       { id:'ses-05', day:'Viernes', slot:'10:00–13:00', date:'14/08/2026', competency:'Gestionar código fuente', instructor:'Carolina Rojas', environment:'Laboratorio A-204', status:'CANCELLED' }
     ],
+    // G1 · ciclo de vida del conflicto: severity + isBlocking (is_blocking_publication) + auditoría de resolución.
+    // 5 tipos canónicos (functional.md/HU-09). 4 pendientes + 1 resuelto (mantiene coherencia con el dashboard).
     conflicts: [
-      { id:'conf-01', type:'INSTRUCTOR_DOUBLE_BOOKED', title:'Instructor doble-asignado', schedule:'ADSO 2874412 · Jornada mañana', date:'06/08/2026', description:'Juan Pérez tiene dos sesiones que se solapan el 10/08/2026 de 07:00 a 10:00.', resolved:false },
-      { id:'conf-02', type:'ENVIRONMENT_DOUBLE_BOOKED', title:'Ambiente doble-asignado', schedule:'Ficha 3011550 · Ambiente A-204', date:'05/08/2026', description:'El ambiente A-204 está reservado para dos sesiones en la misma franja.', resolved:false },
-      { id:'conf-03', type:'SESSIONS_OVERLAP', title:'Sesiones solapadas', schedule:'EME 2987701 · Bloque 10:00–12:00', date:'05/08/2026', description:'Dos sesiones de la misma ficha se solapan parcialmente.', resolved:false },
-      { id:'conf-04', type:'INSTRUCTOR_DOUBLE_BOOKED', title:'Instructor doble-asignado', schedule:'Ficha 2763450 · Jornada tarde', date:'04/08/2026', description:'Laura Gómez figura en dos sesiones simultáneas.', resolved:true }
+      { id:'conf-01', type:'INSTRUCTOR_DOUBLE_BOOKED', title:'Instructor doble-asignado', schedule:'ADSO 2874412 · Jornada mañana', date:'06/08/2026', description:'Juan Pérez tiene dos sesiones que se solapan el 10/08/2026 de 07:00 a 10:00.', severity:'HIGH', isBlocking:true, resolved:false },
+      { id:'conf-02', type:'ENVIRONMENT_DOUBLE_BOOKED', title:'Ambiente doble-asignado', schedule:'Ficha 3011550 · Ambiente A-204', date:'05/08/2026', description:'El ambiente A-204 está reservado para dos sesiones en la misma franja.', severity:'HIGH', isBlocking:true, resolved:false },
+      { id:'conf-03', type:'SESSIONS_OVERLAP', title:'Sesiones solapadas', schedule:'EME 2987701 · Bloque 10:00–12:00', date:'05/08/2026', description:'Dos sesiones de la misma ficha se solapan parcialmente.', severity:'MEDIUM', isBlocking:true, resolved:false },
+      { id:'conf-05', type:'ENVIRONMENT_MAINTENANCE', title:'Ambiente en mantenimiento', schedule:'Ficha 3124508 · Taller T-301', date:'04/08/2026', description:'El taller T-301 tiene un mantenimiento programado que solapa la sesión del jueves.', severity:'MEDIUM', isBlocking:false, resolved:false },
+      { id:'conf-06', type:'INSTRUCTOR_TRAVEL_CONFLICT', title:'Traslado entre sedes insuficiente', schedule:'Ficha 2874412 · Sede Norte → Sede Sur', date:'03/08/2026', description:'Carlos Mesa tiene 15 min entre sesiones en sedes distintas; el traslado requiere 30 min.', severity:'HIGH', isBlocking:true, resolved:false },
+      { id:'conf-04', type:'INSTRUCTOR_UNAVAILABLE', title:'Instructor no disponible', schedule:'Ficha 2763450 · Jornada tarde', date:'04/08/2026', description:'Laura Gómez registró una excepción de disponibilidad (capacitación) que choca con una sesión.', severity:'HIGH', isBlocking:true, resolved:true, resolvedBy:'María García', resolvedAt:'04/08/2026, 12:18', resolutionReason:'Se reprogramó la sesión al viernes y se notificó a la ficha.' }
     ],
     environments: [
       { id:'env-01', name:'Laboratorio A-204', type:'Laboratorio', capacity:30, location:'Bloque A, piso 2', available:true },
@@ -69,12 +73,14 @@
       { id:'fic-04', number:'3124508', program:'122115 — Gestión administrativa', status:'INDUCTION', shift:'Mixta', modality:'Híbrida', capacity:32, start:'04/08/2026' },
       { id:'fic-05', number:'2763450', program:'821609 — Mantenimiento de equipos', status:'COMPLETED', shift:'Diurna', modality:'Presencial', capacity:24, start:'10/02/2025' }
     ],
+    // G2 · notificación accionable: isRead (estado de lectura, distinto de status=send_status) + priority + category + deepLink.
+    // 3 no leídas (not-01/02/03) → coincide con el badge "3" de la barra superior.
     notifications: [
-      { id:'not-01', subject:'Cambio de ambiente', summary:'La sesión del miércoles fue trasladada al Laboratorio A-204.', date:'Hace 12 min', status:'SENT', scheduleId:'sch-03' },
-      { id:'not-02', subject:'Horario publicado', summary:'El horario de la ficha 2874412 ya está disponible.', date:'Hoy, 07:30', status:'SENT', scheduleId:'sch-01' },
-      { id:'not-03', subject:'Sesión cancelada', summary:'La sesión del viernes 14 de agosto fue cancelada.', date:'Ayer, 16:10', status:'SENT', scheduleId:'sch-01' },
-      { id:'not-04', subject:'Seguimiento académico', summary:'Se registró una alerta de asistencia para la ficha 3011550.', date:'04/08/2026', status:'PENDING', scheduleId:null },
-      { id:'not-05', subject:'Actualización de horario', summary:'Se ajustó la franja de la competencia Modelar bases de datos.', date:'03/08/2026', status:'FAILED', scheduleId:'sch-02' }
+      { id:'not-01', subject:'Cambio de ambiente', summary:'La sesión del miércoles fue trasladada al Laboratorio A-204.', date:'Hace 12 min', status:'SENT', scheduleId:'sch-03', isRead:false, priority:'HIGH', category:'SCHEDULE_CHANGED', deepLink:'/mi-horario/sesiones/ses-03' },
+      { id:'not-02', subject:'Horario publicado', summary:'El horario de la ficha 2874412 ya está disponible.', date:'Hoy, 07:30', status:'SENT', scheduleId:'sch-01', isRead:false, priority:'NORMAL', category:'SCHEDULE_PUBLISHED', deepLink:'/mi-horario' },
+      { id:'not-03', subject:'Sesión cancelada', summary:'La sesión del viernes 14 de agosto fue cancelada.', date:'Ayer, 16:10', status:'SENT', scheduleId:'sch-01', isRead:false, priority:'HIGH', category:'SCHEDULE_CHANGED', deepLink:'/mi-horario/sesiones/ses-05' },
+      { id:'not-04', subject:'Seguimiento académico', summary:'Se registró una alerta de asistencia para la ficha 3011550.', date:'04/08/2026', status:'PENDING', scheduleId:null, isRead:true, priority:'NORMAL', category:'GENERAL', deepLink:'/notificaciones/not-04' },
+      { id:'not-05', subject:'Actualización de horario', summary:'Se ajustó la franja de la competencia Modelar bases de datos.', date:'03/08/2026', status:'FAILED', scheduleId:'sch-02', isRead:true, priority:'NORMAL', category:'SCHEDULE_CHANGED', deepLink:'/mi-horario' }
     ],
     users: [
       { id:'usr-01', email:'maria.garcia@sena.edu.co', name:'María García', actor:'Coordinador', role:'COORDINATOR', active:true, lastAccess:'Hoy, 08:03' },
@@ -90,10 +96,10 @@
       { id:'doc-04', title:'Constancia de matrícula — Ficha 2987701', template:'CONSTANCIA_MATRICULA', domain:'academic', owner:'fic-03', status:'AVAILABLE', version:2, created:'04/08/2026, 11:16' }
     ],
     templates: [
-      { id:'tpl-01', code:'CONSTANCIA_HORARIO', name:'Constancia de horario', output:'PDF', version:3, active:true, updated:'05/08/2026' },
-      { id:'tpl-02', code:'REPORTE_CONFLICTOS', name:'Reporte de conflictos', output:'PDF', version:2, active:true, updated:'01/08/2026' },
-      { id:'tpl-03', code:'SEGUIMIENTO_FICHA', name:'Seguimiento de ficha', output:'PDF', version:4, active:true, updated:'30/07/2026' },
-      { id:'tpl-04', code:'CONSTANCIA_MATRICULA', name:'Constancia de matrícula', output:'PDF', version:2, active:false, updated:'22/07/2026' }
+      { id:'tpl-01', code:'CONSTANCIA_HORARIO', name:'Constancia de horario', output:'PDF', version:3, versionStatus:'PUBLISHED', active:true, updated:'05/08/2026' },
+      { id:'tpl-02', code:'REPORTE_CONFLICTOS', name:'Reporte de conflictos', output:'PDF', version:2, versionStatus:'PUBLISHED', active:true, updated:'01/08/2026' },
+      { id:'tpl-03', code:'SEGUIMIENTO_FICHA', name:'Seguimiento de ficha', output:'PDF', version:5, versionStatus:'UNDER_REVIEW', active:true, updated:'30/07/2026' },
+      { id:'tpl-04', code:'CONSTANCIA_MATRICULA', name:'Constancia de matrícula', output:'PDF', version:2, versionStatus:'OBSOLETE', active:false, updated:'22/07/2026' }
     ],
     audit: [
       { id:'evt-01', event:'SCHEDULE_PUBLISHED', entity:'schedule', entityId:'sch-03', actor:'María García', service:'scheduling-service', date:'06/08/2026, 08:45', outcome:'SUCCESS' },
