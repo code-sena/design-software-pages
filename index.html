@@ -19,9 +19,10 @@
   a.card:hover{box-shadow:0 6px 18px rgba(16,24,40,.08);transform:translateY(-2px);border-color:#abefc6}
   a.card strong{display:block;color:var(--brand);margin-bottom:6px;font-size:1.05rem}
   a.card span{color:var(--muted);font-size:.9rem}
-  .primary{grid-column:1/-1;background:var(--brand);border-color:var(--brand)}
+  .primary{background:var(--brand);border-color:var(--brand)}
   .primary strong,.primary span{color:#fff}
   .primary span{opacity:.9}
+  .v2-primary {background:#005c26;border-color:#005c26;}
   h2{font-size:1.05rem;margin:36px 0 4px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
   .roles{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
   .roles a{padding:9px 16px;border:1px solid var(--border);border-radius:999px;background:var(--surface);text-decoration:none;color:var(--text);font-size:.9rem;font-weight:600}
@@ -29,6 +30,9 @@
   .note{margin-top:40px;padding:16px;background:#fffaeb;border:1px solid #fedf89;border-radius:12px;color:#93370d;font-size:.9rem}
   footer{margin-top:40px;color:var(--muted);font-size:.82rem;border-top:1px solid var(--border);padding-top:16px}
   code{background:#f2f4f7;padding:1px 6px;border-radius:5px;font-size:.85em}
+  .version-section {margin-top: 40px; padding-top: 24px; border-top: 2px dashed var(--border);}
+  .version-badge {display: inline-block; padding: 2px 8px; border-radius: 4px; background: #e6f4ec; color: var(--brand); font-size: 0.8rem; font-weight: 700; margin-left: 8px; vertical-align: middle;}
+  .version-badge.new {background: #005c26; color: white;}
 </style>
 </head>
 <body>
@@ -43,35 +47,53 @@
 
   <p class="lead">Prototipo estático de revisión — no consume backend y usa datos ficticios.
   Arquitectura micro-frontend por dominio con shell-host, router por hash y guards RBAC.
-  <strong>53 pantallas y modales</strong> en 7 roles/áreas, incluido el hub de parametrización.</p>
+  <strong>53 pantallas y modales</strong> en 7 roles/áreas.</p>
 
-  <div class="grid">
-    <a class="card primary" href="app/index.html#/login">
-      <strong>▶ Abrir el mockup</strong>
-      <span>Entra por el login (elige rol por correo) y navega el sistema completo.</span>
-    </a>
-    <a class="card" href="app/index.html#/inventory">
-      <strong>Índice de 53 pantallas</strong>
-      <span>Inventario maestro: cada pantalla, su rol, su MFE y su ruta.</span>
-    </a>
-    <a class="card" href="app/review.html">
-      <strong>Vista de revisión</strong>
-      <span>Índice interactivo para recorrer el mockup pantalla por pantalla.</span>
-    </a>
-    <a class="card" href="app/screenshots/">
-      <strong>Capturas (desktop + móvil)</strong>
-      <span>90 PNG de referencia: 45 escritorio (1440×1000) + 45 móviles (390×844).</span>
-    </a>
+  <div class="version-section">
+    <h2>Versión 2 (Mejorada tras pruebas de humo) <span class="version-badge new">NUEVO</span></h2>
+    <p class="sub">Incorpora ajustes de accesibilidad, copys, responsividad de tablas y limpieza de formularios.</p>
+    <div class="grid">
+      <a class="card primary v2-primary" href="v2/index.html#/login" style="grid-column: 1 / -1">
+        <strong>▶ Abrir Mockup v2 (Recomendado)</strong>
+        <span>Entra por el login y navega la versión mejorada con las últimas correcciones de UX.</span>
+      </a>
+      <a class="card" href="v2/index.html#/inventory">
+        <strong>Índice v2 (53 pantallas)</strong>
+        <span>Inventario maestro de la nueva versión.</span>
+      </a>
+      <a class="card" href="v2/review.html">
+        <strong>Vista de revisión v2</strong>
+        <span>Índice interactivo para recorrer la nueva versión pantalla por pantalla.</span>
+      </a>
+    </div>
+
+    <h2 style="margin-top: 24px;">Entrar directo por rol (v2)</h2>
+    <div class="roles">
+      <a href="v2/index.html#/?as=coordinator">Coordinador Académico</a>
+      <a href="v2/index.html#/instructor/mi-horario?as=instructor">Instructor</a>
+      <a href="v2/index.html#/mi-horario?as=learner">Aprendiz</a>
+      <a href="v2/index.html#/admin/indicadores?as=director">Director de Centro</a>
+      <a href="v2/index.html#/backoffice/documentos?as=support">Soporte</a>
+    </div>
   </div>
 
-  <h2>Entrar directo por rol (modo revisión)</h2>
-  <div class="roles">
-    <a href="app/index.html#/?as=coordinator">Coordinador Académico</a>
-    <a href="app/index.html#/instructor/mi-horario?as=instructor">Instructor</a>
-    <a href="app/index.html#/mi-horario?as=learner">Aprendiz</a>
-    <a href="app/index.html#/admin/indicadores?as=director">Director de Centro</a>
-    <a href="app/index.html#/backoffice/documentos?as=support">Administrador de Soporte</a>
-    <a href="app/index.html#/admin/parametrizacion?as=director">Parametrización</a>
+  <div class="version-section">
+    <h2>Versión 1 (Original) <span class="version-badge">LEGACY</span></h2>
+    <p class="sub">Prototipo inicial sometido a las primeras pruebas de humo.</p>
+    <div class="grid">
+      <a class="card primary" href="v1/index.html#/login" style="grid-column: 1 / -1">
+        <strong>▶ Abrir Mockup v1</strong>
+        <span>Versión original para comparación.</span>
+      </a>
+      <a class="card" href="v1/index.html#/inventory">
+        <strong>Índice v1</strong>
+        <span>Inventario original.</span>
+      </a>
+      <a class="card" href="v1/review.html">
+        <strong>Vista de revisión v1</strong>
+        <span>Índice interactivo original.</span>
+      </a>
+    </div>
   </div>
 
   <div class="note">

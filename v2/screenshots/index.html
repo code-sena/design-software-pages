@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capturas — Mockup SENA Gestión de Horarios</title>
+<style>
+  :root{--brand:#007832;--text:#101828;--muted:#475467;--bg:#f9fafb;--surface:#fff;--border:#eaecf0}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:20px 24px;position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;align-items:center;gap:16px;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:12px}
+  .mark{width:40px;height:40px;border-radius:11px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px}
+  h1{font-size:1.15rem;margin:0}
+  header .sub{color:var(--muted);font-size:.82rem;margin-top:2px}
+  a.back{color:var(--brand);text-decoration:none;font-weight:600;font-size:.9rem}
+  .toggle{display:flex;gap:6px;background:#f2f4f7;padding:4px;border-radius:10px}
+  .toggle button{border:0;background:transparent;padding:7px 14px;border-radius:7px;cursor:pointer;font-weight:600;font-size:.85rem;color:var(--muted)}
+  .toggle button.active{background:var(--surface);color:var(--brand);box-shadow:0 1px 2px rgba(16,24,40,.1)}
+  main{max-width:1300px;margin:0 auto;padding:24px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .card .cap{padding:12px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+  .num{background:var(--brand);color:#fff;font-size:.72rem;font-weight:700;width:24px;height:24px;border-radius:6px;display:grid;place-items:center;flex-shrink:0}
+  .cap strong{font-size:.92rem}
+  .shots{display:flex;gap:10px;padding:12px;background:#fbfcfd}
+  .shots figure{margin:0;flex:1;text-align:center}
+  .shots figcaption{font-size:.7rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+  .shots img{width:100%;border:1px solid var(--border);border-radius:8px;cursor:zoom-in;background:#fff;display:block}
+  .shots .mob img{max-width:150px;margin:0 auto}
+  body.only-desktop .mob,body.only-mobile .desk{display:none}
+  /* lightbox */
+  .lb{position:fixed;inset:0;background:rgba(16,24,40,.9);display:none;align-items:center;justify-content:center;z-index:50;padding:24px;cursor:zoom-out}
+  .lb.open{display:flex}
+  .lb img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+</style>
+</head>
+<body class="only-desktop">
+<header>
+  <div class="brand">
+    <div class="mark">SENA</div>
+    <div><h1>Capturas del mockup</h1><div class="sub">45 pantallas · escritorio 1440×1000 · móvil 390×844</div></div>
+  </div>
+  <div class="toggle" id="tg">
+    <button data-m="desktop" class="active">Escritorio</button>
+    <button data-m="mobile">Móvil</button>
+    <button data-m="both">Ambos</button>
+  </div>
+  <a class="back" href="../../index.html">← Volver al portal</a>
+</header>
+<main><div class="grid" id="grid"></div></main>
+<div class="lb" id="lb"><img id="lbimg" alt=""></div>
+<script>
+  const shots=["01-login","02-recuperar-contrasena","03-nueva-contrasena","04-app-shell-por-rol","05-panel-de-notificaciones","06-estados-globales","07-dashboard-inicio","08-horarios-lista","09-detalle-de-horario","10-crear-editar-horario","11-modal-agregar-editar-sesion","12-modal-confirmar-publicacion","13-panel-de-conflictos","14-modal-resolver-conflicto","15-disponibilidad","16-detalle-de-ambiente","17-fichas-lista","18-detalle-de-ficha","19-mi-horario-semana","20-detalle-de-sesion","21-mi-disponibilidad","22-modal-crear-excepcion","23-seguimiento-de-ficha","24-registrar-seguimiento","25-mi-horario-semana","26-notificaciones","27-detalle-de-clase","28-detalle-de-notificacion","29-panel-de-indicadores","30-drill-down-de-kpi","31-usuarios-lista","32-crear-editar-usuario","33-detalle-de-usuario","34-modal-asignar-revocar-rol","35-datos-de-referencia","36-editar-catalogo-valor-parametro","37-documentos-lista","38-plantillas-de-documento","39-auditoria","40-parametrizacion-catalogos","41-detalle-de-documento-versiones","42-modal-generar-documento","43-editor-preview-de-plantilla","44-modal-detalle-de-auditoria","45-crud-catalogo-valor-parametro"];
+  const pretty=s=>{const p=s.split("-");const n=p.shift();return{n,t:p.join(" ").replace(/^\w/,c=>c.toUpperCase())};};
+  document.getElementById("grid").innerHTML=shots.map(s=>{const{n,t}=pretty(s);return `<article class="card"><div class="cap"><span class="num">${n}</span><strong>${t}</strong></div><div class="shots"><figure class="desk"><figcaption>Escritorio</figcaption><img loading="lazy" src="desktop/${s}.png" alt="${t} escritorio"></figure><figure class="mob"><figcaption>Móvil</figcaption><img loading="lazy" src="mobile/${s}.png" alt="${t} móvil"></figure></div></article>`;}).join("");
+  const body=document.body;
+  document.getElementById("tg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;[...e.currentTarget.children].forEach(x=>x.classList.toggle("active",x===b));body.className=b.dataset.m==="both"?"":"only-"+b.dataset.m;});
+  const lb=document.getElementById("lb"),lbimg=document.getElementById("lbimg");
+  document.getElementById("grid").addEventListener("click",e=>{if(e.target.tagName==="IMG"){lbimg.src=e.target.src;lb.classList.add("open");}});
+  lb.addEventListener("click",()=>lb.classList.remove("open"));
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")lb.classList.remove("open");});
+</script>
+</body>
+</html>
