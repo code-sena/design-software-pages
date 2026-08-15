@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reconocimiento notification-service · Sistema de Horarios SENA</title>
+<style>
+  :root{
+    --bg:#0e1726; --panel:#152238; --panel2:#1b2b47; --line:#2b3d5e;
+    --tx:#e6edf7; --mut:#9db0cc; --acc:#3b82f6; --grn:#22c55e; --amb:#f59e0b;
+    --pur:#8b5cf6; --red:#ef4444; --tl:#14b8a6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0b1220,#0e1726);color:var(--tx);
+    font:15px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 60px}
+  header.top{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+  .shield{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#134e4a,#22c55e);
+    display:grid;place-items:center;font-size:26px;box-shadow:0 6px 20px rgba(34,197,94,.25)}
+  h1{font-size:26px;margin:0;letter-spacing:.2px}
+  .sub{color:var(--mut);font-size:14px;margin-top:2px}
+  .stamp{margin-left:auto;text-align:right;color:var(--mut);font-size:12px;
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+  .stamp b{color:var(--amb)}
+  h2{font-size:15px;text-transform:uppercase;letter-spacing:1.5px;color:var(--mut);
+    margin:34px 0 12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+  .grid{display:grid;gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .cards2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:720px){.cards2{grid-template-columns:1fr}}
+  a{color:#93c5fd}
+  a.btn{display:inline-block;background:var(--acc);color:#fff;text-decoration:none;font-weight:700;
+    padding:10px 16px;border-radius:10px;margin-top:8px}
+  a.btn.grn{background:var(--grn)}
+  ul.checklist{list-style:none;margin:0;padding:0}
+  ul.checklist li{padding:8px 0;border-bottom:1px solid var(--line);display:flex;gap:10px}
+  ul.checklist li:last-child{border-bottom:none}
+  ul.checklist li b{color:var(--tx)}
+  .box{display:inline-flex;width:18px;height:18px;border:2px solid var(--acc);border-radius:5px;
+    flex:0 0 auto;margin-top:2px}
+  code,.hl{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px}
+  .b-read{background:rgba(148,163,184,.14);color:#cbd5e1;border:1px solid #64748b}
+  .b-write{background:rgba(34,197,94,.14);color:#86efac;border:1px solid #22c55e}
+  .b-important{background:rgba(239,68,68,.14);color:#fca5a5;border:1px solid #ef4444}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--mut);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  footer{margin-top:40px;color:var(--mut);font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="shield">🎯</div>
+    <div>
+      <h1>Reconocimiento — notification-service</h1>
+      <div class="sub">Actividad de práctica individual · Sistema de Horarios SENA</div>
+    </div>
+    <div class="stamp">Entrega<br><b>Miércoles · 6:00 am</b></div>
+  </header>
+
+  <h2>Objetivo</h2>
+  <div class="card">
+    Clonar y entender <b>de punta a punta</b> el microservicio
+    <code>design-software-notification-service</code> (Go, arquitectura hexagonal):
+    API HTTP, consumer/publisher AMQP, patrón Outbox, y observabilidad OpenTelemetry.
+    No se trata de escribir código nuevo — se trata de <b>leerlo, correrlo, y poder
+    explicarlo</b>.
+  </div>
+
+  <h2>Dónde trabajás</h2>
+  <div class="cards2">
+    <div class="card">
+      <b>1. Cloná el repo</b>
+      <p class="sub">El código real del microservicio.</p>
+      <code>git clone https://github.com/code-sena/design-software-notification-service.git</code>
+    </div>
+    <div class="card">
+      <b>2. Tu Task en el tablero de práctica</b>
+      <p class="sub">Buscá tu usuario de GitHub en cada HU (8 en total) — ahí adjuntás tu evidencia.</p>
+      <a class="btn grn" href="https://github.com/orgs/code-sena/projects/7" target="_blank">Abrir tablero de práctica →</a>
+    </div>
+  </div>
+
+  <h2>Las 8 HU que vas a estudiar</h2>
+  <div class="card">
+    <table>
+      <tr><th>HU</th><th>Tema</th></tr>
+      <tr><td>001</td><td>Enviar notificación vía API (contract-first, POST /notifications)</td></tr>
+      <tr><td>002</td><td>Consumir evento y entregar notificación (AMQP, idempotencia)</td></tr>
+      <tr><td>003</td><td>Entrega por canal EMAIL / IN_APP</td></tr>
+      <tr><td>004</td><td>Resiliencia — reintentos, DLQ, idempotencia</td></tr>
+      <tr><td>005</td><td>Consultar notificación enviada (GET)</td></tr>
+      <tr><td>006</td><td>Plantillas de notificación</td></tr>
+      <tr><td>007</td><td>Observabilidad OpenTelemetry (traces/metrics/logs) + health</td></tr>
+      <tr><td>008</td><td>Levantado local end-to-end (docker-infra)</td></tr>
+    </table>
+    <p class="sub">Son espejo exacto de las HU del tablero principal (Project #3) — mismo número/título, para que quede todo trazable.</p>
+  </div>
+
+  <h2>Qué tenés que entregar (por cada HU, en tu Task)</h2>
+  <div class="card">
+    <ul class="checklist">
+      <li><span class="box"></span> Evidencia + explicación de cómo entendiste/abordaste la HU en el código, y qué le complementarías.</li>
+      <li><span class="box"></span> Subtask: levantaste el micro localmente y lo demostraste funcionando.</li>
+      <li><span class="box"></span> Contenido gráfico (capturas/diagrama) + un <code>.md</code> demostrativo adjunto.</li>
+      <li><span class="box"></span> <b>Link a un video</b> mostrando el micro corriendo — <span class="badge b-important">el más importante</span></li>
+      <li><span class="box"></span> Entorno desplegado en tu propio equipo, funcionando.</li>
+      <li><span class="box"></span> Presentación lista para sustentar el miércoles.</li>
+      <li><span class="box"></span> Al menos una <b>mejora propuesta</b> sobre la HU.</li>
+    </ul>
+  </div>
+
+  <h2>Permisos de este tablero</h2>
+  <div class="card">
+    <span class="badge b-read">Lectura</span> todo el equipo ve épica/HU (no las edita).
+    &nbsp; <span class="badge b-write">Escritura</span> del tablero: solo PM/Delivery.
+    <p class="sub">Vos trabajás sobre <b>tu propia Task</b> (comentarios/adjuntos) — no
+    necesitás permiso de escritura del tablero para eso.</p>
+  </div>
+
+  <footer>
+    Sistema de Horarios SENA · design-software-mockup ·
+    <a href="../index.html">← volver al portal</a>
+  </footer>
+</div>
+</body>
+</html>
