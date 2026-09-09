@@ -209,6 +209,21 @@
   .bar-legend b{ color:var(--text); }
   .compare-note{ font-size:12px; color:var(--text-faint); line-height:1.5; border-top:1px solid var(--border); padding-top:10px; margin-top:2px; }
 
+  .people-scroll{ overflow-x:auto; border:1px solid var(--border); box-shadow:var(--shadow); margin-bottom:14px; }
+  .people-table{ width:100%; border-collapse:collapse; background:var(--surface); min-width:820px; }
+  .people-table thead th{
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--text-faint); font-weight:600; padding:9px 14px; background:var(--surface-2);
+    border-bottom:1px solid var(--border-strong); white-space:nowrap;
+  }
+  .people-table tbody td{ padding:9px 14px; border-bottom:1px solid var(--border); font-size:13px; vertical-align:middle; }
+  .people-table tbody tr:last-child td{ border-bottom:none; }
+  .people-table tbody tr:hover{ background:var(--surface-2); }
+  .people-table .domain-sep td{ background:var(--surface-2); font-family:"IBM Plex Mono", monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-faint); padding:6px 14px; font-weight:600; }
+  .user-chip{ font-family:"IBM Plex Mono", monospace; font-size:12.5px; }
+  .user-chip::before{ content:"@"; color:var(--text-faint); }
+  .people-note{ font-size:12px; color:var(--text-faint); line-height:1.5; margin-bottom:34px; }
+
   .timeline{ position:relative; margin-bottom:8px; padding-left:26px; }
   .timeline::before{ content:""; position:absolute; left:6px; top:4px; bottom:4px; width:1px; background:var(--border-strong); }
   .t-entry{ position:relative; padding-bottom:22px; }
@@ -364,6 +379,65 @@
     </div>
   </div>
 
+  <h2>Integrantes — punta a punta por HU</h2>
+  <p class="people-note" style="margin-bottom:14px;">
+    El board (Project #3) no trackea reviewers ni promoción por ambiente — ese dato solo existe en los Pull Requests
+    reales de cada repo. Se obtuvo directamente de ahí (<code>gh api .../pulls</code> +
+    <code>.../pulls/{n}/reviews</code>), PR por PR, el 2026-09-09. Patrón encontrado en <code>iam-service</code>:
+    <b>ariel5253 (PM)</b> implementó primero cada HU como referencia (25–27 ago, sin revisión — es su propio trabajo
+    de arquitecto), y luego cada aprendiz la <b>reimplementó como ejercicio DEV→QA</b> en su propio PR, a veces
+    con revisión por pares (<code>Andrey31072</code>, <code>Juan282007</code>, <code>Nicolasruiz918</code>,
+    <code>vamaripe</code>) y a veces sin ninguna. La promoción <code>QA→Staging→Main</code> es una operación de
+    <b>repo completo</b> (no por HU) y siempre la ejecuta <b>ariel5253</b>.
+  </p>
+  <div class="people-scroll">
+    <table class="people-table">
+      <thead>
+        <tr><th>HU</th><th>Dev (referencia PM)</th><th>QA (aprendiz · PR)</th><th>Aprobadores QA</th><th>Nota</th></tr>
+      </thead>
+      <tbody>
+        <tr class="domain-sep"><td colspan="5">iam — EP-IAM-01 · repo design-software-iam-service</td></tr>
+        <tr><td>HU-IAM-001: Login, bloqueo y auditoría</td><td><span class="user-chip">ariel5253</span> PR#1 (25 ago)</td><td><span class="user-chip">Dannabarrios</span> PR#16 (30 ago)</td><td class="hu-note">ninguno</td><td class="hu-note">—</td></tr>
+        <tr><td>HU-IAM-002: Refresh, logout y sesiones</td><td><span class="user-chip">ariel5253</span> PR#3 (25 ago)</td><td><span class="user-chip">JohanAceroSalazar</span> PR#17 (31 ago)</td><td><span class="user-chip">Andrey31072</span> · <span class="user-chip">Juan282007</span> · <span class="user-chip">Nicolasruiz918</span></td><td class="hu-note">board también lista a JhonCamiloSuaza; el PR solo lo autoró Johan</td></tr>
+        <tr><td>HU-IAM-003: Contraseña temporal / reset</td><td><span class="user-chip">ariel5253</span> PR#4 (25 ago)</td><td><span class="user-chip">sharithsaavedra1</span> PR#18 (1 sep)</td><td><span class="user-chip">Andrey31072</span> · <span class="user-chip">Nicolasruiz918</span></td><td class="hu-note">—</td></tr>
+        <tr><td>HU-IAM-004: Catálogo RBAC</td><td><span class="user-chip">ariel5253</span> PR#2 (25 ago)</td><td><span class="user-chip">Santiag077127</span> PR#19 (1 sep)</td><td><span class="user-chip">Juan282007</span> · <span class="user-chip">Nicolasruiz918</span></td><td class="hu-note">—</td></tr>
+        <tr><td>HU-IAM-005: Gestión de usuarios y roles</td><td><span class="user-chip">ariel5253</span> PR#5 (26 ago)</td><td><span class="user-chip">valerysinai</span> PR#22 (2 sep)</td><td><span class="user-chip">Juan282007</span> · <span class="user-chip">Nicolasruiz918</span></td><td class="hu-note">—</td></tr>
+        <tr><td>HU-IAM-006: Autorización feature+scope</td><td><span class="user-chip">ariel5253</span> PR#8 (26 ago)</td><td><span class="user-chip">FreinierCardona</span> PR#23 (3 sep)</td><td><span class="user-chip">Juan282007</span> · <span class="user-chip">vamaripe</span></td><td class="hu-note">—</td></tr>
+        <tr><td>HU-IAM-007: Eventos de dominio (outbox)</td><td><span class="user-chip">ariel5253</span> PR#7 (26 ago)</td><td><span class="user-chip">JuanCarlosJC-20</span> PR#31 (4 sep)</td><td><span class="user-chip">Nicolasruiz918</span> · <span class="user-chip">vamaripe</span></td><td class="hu-note">—</td></tr>
+        <tr><td>HU-IAM-008: Provisión usuario↔actor</td><td>— (sin PR de referencia identificado)</td><td><span class="user-chip">daniel2004-lsd</span> PR#14</td><td class="hu-note">n/a</td><td class="hu-note"><b style="color:var(--backlog)">⚠ discrepancia:</b> PR#14 está <b>cerrado sin mergear</b> (<code>merged_at: null</code>) — el board lo marca "Done" pero no hay merge real que lo respalde</td></tr>
+        <tr><td>HU-IAM-009: Auditoría de login</td><td><span class="user-chip">ariel5253</span> PR#9 (27 ago)</td><td><span class="user-chip">yersonct</span> PR#33 (4 sep)</td><td><span class="user-chip">Juan282007</span> · <span class="user-chip">vamaripe</span></td><td class="hu-note">—</td></tr>
+        <tr><td>HU-IAM-010: Claims JWT</td><td><span class="user-chip">ariel5253</span> PR#10 (27 ago)</td><td><span class="user-chip">EmersonMolano</span> PR#27 (3 sep)</td><td><span class="user-chip">Nicolasruiz918</span> · <span class="user-chip">vamaripe</span></td><td class="hu-note">—</td></tr>
+        <tr><td>HU-IAM-011: Observabilidad OTel</td><td><span class="user-chip">ariel5253</span> PR#12 (27 ago)</td><td><span class="user-chip">Brayanperdomoo</span> PR#30 (4 sep)</td><td><span class="user-chip">Juan282007</span> · <span class="user-chip">Nicolasruiz918</span> · <span class="user-chip">vamaripe</span></td><td class="hu-note"><b style="color:var(--backlog)">⚠ discrepancia:</b> el PR#30 real de Brayanperdomoo es "migrate application to React.js" (frontend) — no observabilidad. El board lo asocia mal a esta HU</td></tr>
+        <tr><td>HU-IAM-012: Levantado local e2e</td><td>—</td><td><span class="user-chip">jsgh1</span> PR#29 (4 sep)</td><td><span class="user-chip">Juan282007</span> · <span class="user-chip">Nicolasruiz918</span> · <span class="user-chip">vamaripe</span></td><td class="hu-note">—</td></tr>
+        <tr class="domain-sep"><td colspan="5">notification — EP-NOTIF-01 · repo design-software-notification-service</td></tr>
+        <tr><td>HU-NOTIF-001 a 008 + EP-NOTIF</td><td colspan="2"><span class="user-chip">ariel5253</span> — 10 PRs mergeados directo (15–30 ago), sin colaborador asignado real</td><td class="hu-note">ninguno en las 10</td><td class="hu-note"><b style="color:var(--backlog)">0 reviews registradas</b> en todo el repo — nadie más participó. Board muestra estas 9 tareas "In Progress" (no Done)</td></tr>
+        <tr class="domain-sep"><td colspan="5">monitoring — EP-MON · repos monitoring-db / monitoring-service / shared-contracts</td></tr>
+        <tr><td>EP-MON: monitoring-service (exemplar Python/FastAPI)</td><td colspan="2"><span class="user-chip">ariel5253</span> — PR#1 monitoring-service (abierto, sin mergear)</td><td class="hu-note">ninguno</td><td class="hu-note">Estado board: In Progress. El PR sigue <b>abierto</b>, no mergeado</td></tr>
+        <tr><td>HU-MON-F2: retirar /sent-notifications del contrato (TD-011)</td><td colspan="2"><span class="user-chip">ariel5253</span> — PR#8 shared-contracts (28 ago)</td><td class="hu-note">ninguno</td><td class="hu-note"><span class="chip done">✓</span> Done</td></tr>
+        <tr><td>HU-MON-F3: remediación monitoring-db (drop sent_notification, +outbox)</td><td colspan="2"><span class="user-chip">ariel5253</span> — PR#60 monitoring-db (28 ago)</td><td><span class="user-chip">Nicolasruiz918</span> · <span class="user-chip">jsgh1</span></td><td class="hu-note"><span class="chip done">✓</span> Done</td></tr>
+        <tr><td>HU-MON-001 a 010 (catálogos, KPIs, alertas, reportes...)</td><td colspan="3" class="hu-note">10 HU en <span class="chip backlog">○</span> Backlog — sin colaborador asignado, sin PR</td><td class="hu-note">La base estructural de <code>monitoring-db</code> sí tiene 60 PRs reales (setup inicial, no por-HU) de <code>Andrey31072</code>, <code>Nicolasruiz918</code>, <code>JhonCamiloSuaza</code>, <code>Kevin-Stiven-Lopez-Amaya404</code>, <code>Karendaniela09</code>, <code>nataliachala1</code> — no desagregado aquí por volumen</td></tr>
+        <tr class="domain-sep"><td colspan="5">reference-data · academic-management · training-environment · scheduling · actors · document · audit — sin épica ejecutada</td></tr>
+        <tr><td>reference-data</td><td colspan="3" class="hu-note">0 HU en el board</td><td class="hu-note" rowspan="7" style="vertical-align:top;">Los 7 dominios de la izquierda <b>no tienen ninguna épica de ejecución abierta</b> en Project #3 — cero ítems con ese <code>Dominio</code> asignado. Sus repos <code>-db</code> sí están construidos (ver corrección de vértice BD, 10/10) — es la capa <b>API/HU</b> la que aún no arranca en ninguno de los 7.</td></tr>
+        <tr><td>academic-management</td><td colspan="3" class="hu-note">0 HU en el board</td></tr>
+        <tr><td>training-environment</td><td colspan="3" class="hu-note">0 HU en el board</td></tr>
+        <tr><td>scheduling</td><td colspan="3" class="hu-note">0 HU en el board</td></tr>
+        <tr><td>actors</td><td colspan="3" class="hu-note">0 HU en el board</td></tr>
+        <tr><td>document</td><td colspan="3" class="hu-note">0 HU en el board</td></tr>
+        <tr><td>audit</td><td colspan="3" class="hu-note">0 HU en el board</td></tr>
+        <tr class="domain-sep"><td colspan="5">Promoción de ambiente (repo completo, no por HU)</td></tr>
+        <tr><td><code>iam-db</code>: develop→qa→staging→main</td><td colspan="3"><span class="user-chip">ariel5253</span> — PR#70, #71, #72 (14 ago), sin revisión</td><td class="hu-note">—</td></tr>
+        <tr><td><code>monitoring-db</code>: develop→qa→staging→main</td><td colspan="3"><span class="user-chip">ariel5253</span> — PR#57, #58, #59 (14 ago), sin revisión</td><td class="hu-note">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="people-note">
+    <b>Alcance — 100% de los 10 dominios:</b> <code>iam</code> (12 HU, único con revisión por pares real),
+    <code>notification</code> (9 tareas, 0 revisión), <code>monitoring</code> (2 Done + 1 In Progress con PR real,
+    10 Backlog sin PR) y los <b>7 dominios restantes con 0 HU</b>, listados con la razón. <code>monitoring-db</code>
+    tiene además 60 PRs de setup estructural no desagregados por-HU aquí por volumen. Los 80 ítems en Backlog del
+    board no tienen PR todavía, por definición.
+  </p>
+
   <h2>Historial de avance</h2>
   <div class="timeline" id="timeline"></div>
 
@@ -382,6 +456,25 @@
   var STATE_LABEL = { done:'✓', progress:'◐', backlog:'○', na:'—' };
 
   var SNAPSHOTS = [
+    {
+      date: '2026-09-09',
+      source: 'PRs reales por repo (gh api pulls + pulls/{n}/reviews) — publicado a pedido explícito',
+      changeNote: 'Se agrega la tabla "Integrantes — punta a punta por HU" con detalle completo (usernames, PRs, aprobadores) para los 10 dominios, publicada aquí de forma explícita — antes solo vivía en el registro privado del team.',
+      summary: { done: 1, progress: 2, backlog: 7, huDone: 12, huTotal: 30 },
+      micros: [
+        { id:'01', name:'iam', stack:'Java', epic:'EP-IAM-01', bd:'done', api:'done', front:'backlog', hu:'12 / 12', huNote:'', env:'Done·Dev', envState:'top' },
+        { id:'02', name:'notification', stack:'Go', epic:'EP-NOTIF-01', bd:'done', api:'progress', front:'na', hu:'0 / 8', huNote:'(9 In Progress en el board)', env:'dev (in progress)', envState:'plain' },
+        { id:'03', name:'monitoring', stack:'Python', epic:'EP-MON-01', bd:'done', api:'progress', front:'backlog', hu:'2 / 10', huNote:'(F2+F3 ✓)', env:'dev (prep)', envState:'plain' },
+        { id:'04', name:'reference-data', stack:'Go', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'05', name:'academic-management', stack:'Java', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'06', name:'training-environment', stack:'Go', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'07', name:'scheduling', stack:'Java', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'08', name:'actors', stack:'Java', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'09', name:'document', stack:'Python', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'10', name:'audit', stack:'Go', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' }
+      ],
+      infra: []
+    },
     {
       date: '2026-09-09',
       source: 'GitHub Project #3 (board real, GraphQL)',
