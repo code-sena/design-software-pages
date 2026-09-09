@@ -186,6 +186,29 @@
   .cross-row .desc{ color:var(--text-muted); font-size:12.5px; line-height:1.4; }
   .cross-row .state{ text-align:right; }
 
+  .compare-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:1px;
+    background:var(--border); border:1px solid var(--border);
+    margin-bottom:18px; box-shadow:var(--shadow);
+  }
+  .compare-card{ background:var(--surface); padding:18px 20px; display:flex; flex-direction:column; gap:12px; }
+  .compare-card h3{
+    margin:0; font-size:14px; font-weight:600; display:flex; align-items:baseline; gap:8px;
+  }
+  .compare-card h3 .board-tag{
+    font-family:"IBM Plex Mono", monospace; font-size:10.5px; color:var(--text-faint);
+    text-transform:uppercase; letter-spacing:0.05em; font-weight:600;
+  }
+  .compare-card .board-desc{ font-size:12.5px; color:var(--text-muted); line-height:1.5; margin:-6px 0 0; }
+  .compare-total{ font-family:"IBM Plex Mono", monospace; font-size:24px; font-weight:700; }
+  .compare-total .l{ font-size:11px; font-weight:600; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.05em; margin-left:8px; }
+  .bar-stack{ display:flex; height:10px; width:100%; overflow:hidden; border:1px solid var(--border-strong); }
+  .bar-seg.done{ background:var(--done); } .bar-seg.progress{ background:var(--progress); }
+  .bar-seg.backlog{ background:var(--backlog-border); }
+  .bar-legend{ display:flex; flex-wrap:wrap; gap:8px 16px; font-size:11.5px; font-family:"IBM Plex Mono", monospace; color:var(--text-muted); }
+  .bar-legend b{ color:var(--text); }
+  .compare-note{ font-size:12px; color:var(--text-faint); line-height:1.5; border-top:1px solid var(--border); padding-top:10px; margin-top:2px; }
+
   .timeline{ position:relative; margin-bottom:8px; padding-left:26px; }
   .timeline::before{ content:""; position:absolute; left:6px; top:4px; bottom:4px; width:1px; background:var(--border-strong); }
   .t-entry{ position:relative; padding-bottom:22px; }
@@ -290,6 +313,56 @@
 
   <h2>Repos transversales / plataforma</h2>
   <div class="cross-list" id="infra-list"></div>
+
+  <h2>Board real vs. board de práctica</h2>
+  <div class="compare-grid">
+    <div class="compare-card">
+      <h3>Sistema de Horarios — Backlog <span class="board-tag">Project #3 · real</span></h3>
+      <p class="board-desc">HU + PRs del macroproyecto, una sola fuente de verdad, con vistas por capa/micro y sprints.</p>
+      <div class="compare-total">108 <span class="l">HU totales</span></div>
+      <div class="bar-stack">
+        <span class="bar-seg backlog" style="width:74%"></span>
+        <span class="bar-seg progress" style="width:10%"></span>
+        <span class="bar-seg done" style="width:16%"></span>
+      </div>
+      <div class="bar-legend">
+        <span><b>80</b> Backlog (74%)</span>
+        <span><b>11</b> In Progress (10%)</span>
+        <span><b>17</b> Done (16%)</span>
+      </div>
+      <div class="bar-legend">
+        <span>Por dominio: <b>iam</b> 14 · <b>monitoring</b> 14 · <b>notification</b> 9 · sin dominio 71</span>
+      </div>
+    </div>
+    <div class="compare-card">
+      <h3>Práctica — Reconocimiento notification-service <span class="board-tag">Project #7 · sintético</span></h3>
+      <p class="board-desc">Tablero de práctica para aprendices, solo lectura para el equipo. Espejo de EP-NOTIF (Project #3): una tarea por aprendiz en cada una de las 8 HU.</p>
+      <div class="compare-total">273 <span class="l">tareas totales</span></div>
+      <div class="bar-stack">
+        <span class="bar-seg backlog" style="width:100%"></span>
+      </div>
+      <div class="bar-legend">
+        <span><b>273</b> Todo (100%)</span>
+        <span><b>0</b> iniciadas</span>
+        <span><b>0</b> completadas</span>
+      </div>
+      <div class="bar-legend">
+        <span><b>57</b> asignadas (7 personas) · <b>216</b> sin asignar aún</span>
+      </div>
+      <div class="compare-note">Sin nombres de aprendices en esta vista pública — el detalle por colaborador vive en el registro interno del team.</div>
+    </div>
+  </div>
+
+  <div class="infra-note" style="background:var(--progress-bg); border-color:var(--progress-border);">
+    <span class="tag" style="color:var(--progress);">Relación entre boards</span>
+    <div>
+      <code>notification-service</code> ya está <b style="color:var(--done)">100% Done</b> en el board real
+      (8/8 HU cerradas) — pero su espejo de práctica en Project #7 sigue en <b style="color:var(--backlog)">0%</b>:
+      el ejercicio de reconocimiento para aprendices apenas está en fase de asignación (57 de 273 tareas repartidas
+      hasta ahora). Los dos boards avanzan en paralelo, no en sincronía: que una HU esté cerrada en el board real
+      no implica que su práctica asociada haya empezado.
+    </div>
+  </div>
 
   <h2>Historial de avance</h2>
   <div class="timeline" id="timeline"></div>
