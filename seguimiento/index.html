@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Design-Software — Seguimiento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F4EF;
+    --surface:#FFFFFF;
+    --surface-2:#FBFAF6;
+    --border:#DEDACC;
+    --border-strong:#C7C2AF;
+    --text:#1D211E;
+    --text-muted:#5C6058;
+    --text-faint:#8C8B7E;
+    --accent:#2C5F5A;
+    --accent-soft:#E3EEEB;
+    --accent-strong:#1D423E;
+
+    --done:#2F7D52;
+    --done-bg:#E3F2E7;
+    --done-border:#B9DCC3;
+
+    --progress:#A8690D;
+    --progress-bg:#FAEFDA;
+    --progress-border:#EAD09A;
+
+    --backlog:#A24B39;
+    --backlog-bg:#F6E5DF;
+    --backlog-border:#E4BFB1;
+
+    --na:#9A968A;
+    --na-bg:#EFEDE5;
+
+    --shadow: 0 1px 2px rgba(29,33,30,0.06), 0 1px 1px rgba(29,33,30,0.04);
+    font-variant-numeric: tabular-nums;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:1080px; margin:0 auto; padding:40px 28px 64px; }
+  code, .mono{ font-family:"IBM Plex Mono", ui-monospace, "SF Mono", Consolas, monospace; }
+  a{ color:var(--accent-strong); }
+
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12.5px;
+    color:var(--text-muted);
+    text-decoration:none;
+    margin-bottom:18px;
+    font-family:"IBM Plex Mono", monospace;
+  }
+  .back-link:hover{ color:var(--accent-strong); }
+
+  header{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    border-bottom:1px solid var(--border);
+    padding-bottom:22px;
+    margin-bottom:26px;
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:600;
+  }
+  h1{ font-size:26px; line-height:1.2; margin:2px 0 4px; font-weight:700; text-wrap:balance; letter-spacing:-0.01em; }
+  .subhead{ color:var(--text-muted); font-size:14.5px; max-width:62ch; line-height:1.5; }
+  .subhead a{ color:var(--accent-strong); text-decoration-color:var(--border-strong); }
+
+  .meta-row{
+    display:flex; flex-wrap:wrap; align-items:center; gap:8px 18px;
+    margin-top:14px; font-size:12.5px; color:var(--text-faint);
+    font-family:"IBM Plex Mono", monospace;
+  }
+  .meta-row span b{ color:var(--text-muted); font-weight:600; }
+  .public-badge{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:3px 9px; border:1px solid var(--progress-border);
+    background:var(--progress-bg); color:var(--progress);
+  }
+
+  .stats{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:1px;
+    background:var(--border); border:1px solid var(--border);
+    margin-bottom:30px; box-shadow:var(--shadow);
+  }
+  .stat{ background:var(--surface); padding:16px 18px; display:flex; flex-direction:column; gap:4px; }
+  .stat .n{ font-size:28px; font-weight:700; font-family:"IBM Plex Mono", monospace; letter-spacing:-0.01em; }
+  .stat .n.done{color:var(--done);} .stat .n.progress{color:var(--progress);} .stat .n.backlog{color:var(--backlog);}
+  .stat .l{ font-size:11.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-faint); font-weight:600; }
+
+  h2{
+    font-size:13px; text-transform:uppercase; letter-spacing:0.07em; font-weight:600;
+    color:var(--text-muted); margin:0 0 12px; display:flex; align-items:baseline; gap:10px;
+  }
+  h2::after{ content:""; flex:1; height:1px; background:var(--border); }
+
+  .legend{
+    display:flex; flex-wrap:wrap; gap:14px 22px; padding:12px 16px;
+    background:var(--surface-2); border:1px solid var(--border);
+    margin-bottom:28px; font-size:12.5px; color:var(--text-muted);
+  }
+  .legend-item{display:flex; align-items:center; gap:7px;}
+  .dot{width:9px; height:9px; border-radius:50%; flex:none;}
+  .dot.done{background:var(--done);} .dot.progress{background:var(--progress);}
+  .dot.backlog{background:var(--backlog);} .dot.na{background:var(--na);}
+
+  .matrix-scroll{ overflow-x:auto; border:1px solid var(--border); box-shadow:var(--shadow); margin-bottom:34px; }
+  table{ width:100%; border-collapse:collapse; background:var(--surface); min-width:760px; }
+  thead th{
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--text-faint); font-weight:600; padding:10px 14px; background:var(--surface-2);
+    border-bottom:1px solid var(--border-strong); white-space:nowrap;
+  }
+  thead th.center, td.center{ text-align:center; }
+  tbody td{ padding:11px 14px; border-bottom:1px solid var(--border); font-size:13.5px; vertical-align:middle; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:var(--surface-2); }
+
+  .micro-name{ font-family:"IBM Plex Mono", monospace; font-weight:600; font-size:13.5px; }
+  .micro-idx{ font-family:"IBM Plex Mono", monospace; color:var(--text-faint); font-size:12px; margin-right:8px; }
+  .stack-pill{
+    display:inline-block; font-family:"IBM Plex Mono", monospace; font-size:11px; padding:2px 7px;
+    border:1px solid var(--border-strong); color:var(--text-muted); background:var(--surface-2);
+  }
+  .epic{ font-family:"IBM Plex Mono", monospace; font-size:12px; color:var(--text-muted); }
+  .epic.none{ color:var(--text-faint); }
+
+  .chip{
+    display:inline-flex; align-items:center; justify-content:center; min-width:30px; height:22px;
+    padding:0 7px; font-size:11px; font-weight:600; font-family:"IBM Plex Mono", monospace; border:1px solid transparent;
+  }
+  .chip.done{ background:var(--done-bg); color:var(--done); border-color:var(--done-border); }
+  .chip.progress{ background:var(--progress-bg); color:var(--progress); border-color:var(--progress-border); }
+  .chip.backlog{ background:var(--backlog-bg); color:var(--backlog); border-color:var(--backlog-border); }
+  .chip.na{ background:var(--na-bg); color:var(--na); border-color:var(--border); }
+
+  .hu-cell{ font-family:"IBM Plex Mono", monospace; font-size:12.5px; color:var(--text-muted); white-space:nowrap; }
+  .hu-note{ color:var(--text-faint); font-size:11px; }
+
+  .env-pill{
+    font-family:"IBM Plex Mono", monospace; font-size:11px; padding:3px 8px;
+    border:1px solid var(--border-strong); white-space:nowrap; display:inline-block;
+  }
+  .env-pill.top{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent-strong); }
+  .env-pill.none{ color:var(--text-faint); border-style:dashed; }
+
+  .infra-note{
+    display:flex; gap:14px; align-items:flex-start; padding:14px 16px;
+    background:var(--accent-soft); border:1px solid var(--accent);
+    margin-bottom:34px; font-size:13px; color:var(--text); line-height:1.55;
+  }
+  .infra-note .tag{
+    font-family:"IBM Plex Mono", monospace; font-weight:700; font-size:11px; color:var(--accent-strong);
+    text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap; padding-top:1px;
+  }
+  .infra-note b{ font-weight:600; }
+  .infra-note code{ font-size:12px; background:var(--surface); padding:1px 5px; border:1px solid var(--border-strong); }
+
+  .cross-list{
+    display:flex; flex-direction:column; border:1px solid var(--border);
+    background:var(--surface); box-shadow:var(--shadow); margin-bottom:40px;
+  }
+  .cross-row{
+    display:grid; grid-template-columns:180px 1fr 120px; gap:16px; align-items:center;
+    padding:11px 16px; border-bottom:1px solid var(--border); font-size:13.5px;
+  }
+  .cross-row:last-child{ border-bottom:none; }
+  .cross-row .name{ font-family:"IBM Plex Mono", monospace; font-weight:600; font-size:13px; }
+  .cross-row .desc{ color:var(--text-muted); font-size:12.5px; line-height:1.4; }
+  .cross-row .state{ text-align:right; }
+
+  .timeline{ position:relative; margin-bottom:8px; padding-left:26px; }
+  .timeline::before{ content:""; position:absolute; left:6px; top:4px; bottom:4px; width:1px; background:var(--border-strong); }
+  .t-entry{ position:relative; padding-bottom:22px; }
+  .t-entry:last-child{ padding-bottom:0; }
+  .t-entry::before{
+    content:""; position:absolute; left:-26px; top:3px; width:11px; height:11px;
+    border-radius:50%; background:var(--surface); border:2px solid var(--accent);
+  }
+  .t-entry.is-latest::before{ background:var(--accent); }
+  .t-head{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:4px; }
+  .t-date{ font-family:"IBM Plex Mono", monospace; font-weight:600; font-size:13px; color:var(--text); }
+  .t-source{ font-size:11px; color:var(--text-faint); font-family:"IBM Plex Mono", monospace; }
+  .t-note{ font-size:13.5px; color:var(--text-muted); line-height:1.5; margin-bottom:6px; max-width:70ch; }
+  .t-summary{ display:flex; flex-wrap:wrap; gap:6px 10px; font-size:11.5px; font-family:"IBM Plex Mono", monospace; color:var(--text-faint); }
+  .t-summary b{ color:var(--text-muted); font-weight:600; }
+
+  footer{ margin-top:36px; padding-top:18px; border-top:1px solid var(--border); font-size:12px; color:var(--text-faint); line-height:1.6; }
+  footer a{ color:var(--accent-strong); }
+
+  @media (max-width:640px){
+    .stats{ grid-template-columns:repeat(2,1fr); }
+    .cross-row{ grid-template-columns:1fr; gap:4px; }
+    .cross-row .state{ text-align:left; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back-link" href="../index.html">← Portal design-software</a>
+
+  <header>
+    <div class="eyebrow">code-sena / design-software · Sistema de Gestión de Horarios SENA</div>
+    <h1>Estado de construcción por microservicio</h1>
+    <div class="subhead">
+      Matriz dominio × capa (BD, API, front, infra) para los 10 microservicios del proyecto y sus repos transversales.
+      Fuente: <a href="https://github.com/orgs/code-sena/projects/3" target="_blank" rel="noopener">GitHub Project #3</a>
+      + verificación directa de repos <code>-db</code> el 2026-09-09.
+    </div>
+    <div class="meta-row">
+      <span class="public-badge">⚠ sitio público — sin datos de credenciales ni infraestructura sensible</span>
+      <span>Ambiente tope alcanzado: <b>Done·Dev</b></span>
+      <span>Team: <b>design-software</b> (41 repos)</span>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="n done">2/10</div><div class="l">Micros Done·Dev</div></div>
+    <div class="stat"><div class="n progress">1/10</div><div class="l">Micros en progreso</div></div>
+    <div class="stat"><div class="n backlog">7/10</div><div class="l">Micros en backlog (API/front)</div></div>
+    <div class="stat"><div class="n">20/30</div><div class="l">HU cerradas</div></div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="dot done"></span> Completo / maduro — verificado en el contenido real del repo</div>
+    <div class="legend-item"><span class="dot progress"></span> En progreso — arrancado, sin cerrar</div>
+    <div class="legend-item"><span class="dot backlog"></span> Backlog — repo scaffold, sin construir aún</div>
+    <div class="legend-item"><span class="dot na"></span> No aplica al dominio</div>
+  </div>
+
+  <h2>Matriz por microservicio</h2>
+  <div class="matrix-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Dominio</th>
+          <th>Stack</th>
+          <th>Épica</th>
+          <th class="center">BD<br><span class="mono" style="font-size:10px;font-weight:400;">-db</span></th>
+          <th class="center">API<br><span class="mono" style="font-size:10px;font-weight:400;">-service</span></th>
+          <th class="center">Front<br><span class="mono" style="font-size:10px;font-weight:400;">-mfe</span></th>
+          <th>HU cerradas</th>
+          <th>Ambiente tope</th>
+        </tr>
+      </thead>
+      <tbody id="matrix-body"></tbody>
+    </table>
+  </div>
+
+  <div class="infra-note" style="background:var(--done-bg); border-color:var(--done-border);">
+    <span class="tag" style="color:var(--done);">Vértice BD — corrección</span>
+    <div>
+      <b>10/10 esquemas construidos.</b> El board (HU) solo marcaba <code>iam</code>, <code>notification</code> y
+      <code>monitoring</code> como BD lista — pero los 10 repos <code>-db</code> tienen DDL real y equivalente:
+      <code>01_ddl</code> completo (tablas, vistas, materialized views, functions, procedures, triggers, índices) más
+      <code>02_dml</code>–<code>05_rollbacks</code> y changelog Liquibase. Verificado el 2026-09-09 directamente contra
+      GitHub, repo por repo. La capa BD del proyecto está madura en todos los dominios; lo que sigue pendiente por
+      dominio es <b>API</b> (<code>-service</code>, mayoría scaffold hexagonal vacío) y <b>front</b>
+      (<code>-mfe</code>, sin construir salvo lo listado abajo).
+    </div>
+  </div>
+
+  <div class="infra-note">
+    <span class="tag">Vértice Infra</span>
+    <div>
+      No es por-micro: es transversal. <b><code>docker-infra</code></b> orquesta el PostgreSQL compartido y los runners
+      Liquibase por módulo — cada repo <code>-db</code> le apunta en vez de tener su propia infra. Estado actual:
+      <b style="color:var(--progress)">en uso</b> (por <code>iam</code> y <code>notification</code> únicamente).
+      <b><code>shared-contracts</code></b> (OpenAPI + eventos) tiene el mismo estado y los mismos dos consumidores.
+    </div>
+  </div>
+
+  <h2>Repos transversales / plataforma</h2>
+  <div class="cross-list" id="infra-list"></div>
+
+  <h2>Historial de avance</h2>
+  <div class="timeline" id="timeline"></div>
+
+  <footer>
+    <code>Done·Dev</code> es el gate más bajo del DoD por ambiente, no "terminado en producción" — la promoción
+    <code>dev → qa → staging → main</code> está pendiente para todos los microservicios, incluidos <code>iam</code> y <code>notification</code>.
+    Este resumen se actualiza manualmente; el detalle vivo vive en
+    <a href="https://github.com/orgs/code-sena/projects/3" target="_blank" rel="noopener">GitHub Project #3</a> y
+    <a href="https://github.com/code-sena/design-software-hu-log/blob/main/STATUS.md" target="_blank" rel="noopener">hu-log/STATUS.md</a>
+    (repo privado, solo team).
+  </footer>
+
+</div>
+
+<script>
+  var STATE_LABEL = { done:'✓', progress:'◐', backlog:'○', na:'—' };
+
+  var SNAPSHOTS = [
+    {
+      date: '2026-09-09',
+      source: 'GitHub (repos -db) + STATUS.md',
+      changeNote: 'Corrección: los 10 repos -db tienen esquema completo y maduro (DDL, vistas, procedures, triggers, changelog Liquibase) verificado directamente en GitHub — no solo iam/notification/monitoring como marcaba el board. API y front siguen mayormente en scaffold.',
+      summary: { done: 2, progress: 1, backlog: 7, huDone: 20, huTotal: 30 },
+      micros: [
+        { id:'01', name:'iam', stack:'Java', epic:'EP-IAM-01', bd:'done', api:'done', front:'backlog', hu:'12 / 12', huNote:'', env:'Done·Dev', envState:'top' },
+        { id:'02', name:'notification', stack:'Go', epic:'EP-NOTIF-01', bd:'done', api:'done', front:'na', hu:'8 / 8', huNote:'', env:'Done·Dev', envState:'top' },
+        { id:'03', name:'monitoring', stack:'Python', epic:'EP-MON-01', bd:'done', api:'progress', front:'backlog', hu:'0 / 10', huNote:'(F2+F3 ✓)', env:'dev (prep)', envState:'plain' },
+        { id:'04', name:'reference-data', stack:'Go', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'05', name:'academic-management', stack:'Java', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'06', name:'training-environment', stack:'Go', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'07', name:'scheduling', stack:'Java', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'08', name:'actors', stack:'Java', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'09', name:'document', stack:'Python', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'10', name:'audit', stack:'Go', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' }
+      ],
+      infra: [
+        { name:'docs', desc:'Fuente de verdad documental (solo main)', state:'done', label:'activo' },
+        { name:'hu-log', desc:'Registro de HU del macroproyecto', state:'done', label:'activo' },
+        { name:'shared-contracts', desc:'Contratos OpenAPI + esquema de eventos, versionado build-time', state:'progress', label:'en uso' },
+        { name:'docker-infra', desc:'Infra local: perfiles compose + observabilidad + BD compartida', state:'progress', label:'en uso' },
+        { name:'mockup', desc:'Mockup navegable UX/UI, prototipo desechable (SDD) — este mismo portal', state:'progress', label:'parcial' },
+        { name:'design-system', desc:'Tokens + componentes visuales compartidos del front', state:'backlog', label:'scaffold' },
+        { name:'frontend-platform', desc:'auth-client · http-client · event-bus · config (Module Federation)', state:'backlog', label:'scaffold' },
+        { name:'web-shell / web-bff', desc:'Host web + agregación BFF para el frontend web', state:'backlog', label:'scaffold' },
+        { name:'mobile-shell / mobile-bff', desc:'Host mobile + agregación BFF para el frontend móvil', state:'backlog', label:'scaffold' },
+        { name:'e2e', desc:'Integración + E2E + seed orquestado cross-servicio', state:'backlog', label:'scaffold' }
+      ]
+    },
+    {
+      date: '2026-09-09',
+      source: 'design-software-hu-log/STATUS.md',
+      changeNote: 'Snapshot inicial del panel de seguimiento, construido directamente desde STATUS.md (board).',
+      summary: { done: 2, progress: 1, backlog: 7, huDone: 20, huTotal: 30 },
+      micros: [
+        { id:'01', name:'iam', stack:'Java', epic:'EP-IAM-01', bd:'done', api:'done', front:'backlog', hu:'12 / 12', huNote:'', env:'Done·Dev', envState:'top' },
+        { id:'02', name:'notification', stack:'Go', epic:'EP-NOTIF-01', bd:'done', api:'done', front:'na', hu:'8 / 8', huNote:'', env:'Done·Dev', envState:'top' },
+        { id:'03', name:'monitoring', stack:'Python', epic:'EP-MON-01', bd:'done', api:'progress', front:'backlog', hu:'0 / 10', huNote:'(F2+F3 ✓)', env:'dev (prep)', envState:'plain' },
+        { id:'04', name:'reference-data', stack:'Go', epic:'—', bd:'backlog', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'05', name:'academic-management', stack:'Java', epic:'—', bd:'backlog', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'06', name:'training-environment', stack:'Go', epic:'—', bd:'backlog', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'07', name:'scheduling', stack:'Java', epic:'—', bd:'backlog', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'08', name:'actors', stack:'Java', epic:'—', bd:'backlog', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'09', name:'document', stack:'Python', epic:'—', bd:'backlog', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'10', name:'audit', stack:'Go', epic:'—', bd:'backlog', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' }
+      ],
+      infra: []
+    }
+  ];
+
+  function chipHtml(state){ return '<span class="chip ' + state + '">' + STATE_LABEL[state] + '</span>'; }
+
+  function envHtml(m){
+    var cls = m.envState === 'top' ? 'env-pill top' : (m.envState === 'none' ? 'env-pill none' : 'env-pill');
+    return '<span class="' + cls + '">' + m.env + '</span>';
+  }
+
+  function renderMatrix(snap){
+    document.getElementById('matrix-body').innerHTML = snap.micros.map(function(m){
+      return '<tr>' +
+        '<td><span class="micro-idx">' + m.id + '</span><span class="micro-name">' + m.name + '</span></td>' +
+        '<td><span class="stack-pill">' + m.stack + '</span></td>' +
+        '<td class="epic' + (m.epic === '—' ? ' none' : '') + '">' + m.epic + '</td>' +
+        '<td class="center">' + chipHtml(m.bd) + '</td>' +
+        '<td class="center">' + chipHtml(m.api) + '</td>' +
+        '<td class="center">' + chipHtml(m.front) + '</td>' +
+        '<td class="hu-cell">' + m.hu + (m.huNote ? ' <span class="hu-note">' + m.huNote + '</span>' : '') + '</td>' +
+        '<td>' + envHtml(m) + '</td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  function renderInfra(snap){
+    document.getElementById('infra-list').innerHTML = snap.infra.map(function(r){
+      return '<div class="cross-row">' +
+        '<div class="name">' + r.name + '</div>' +
+        '<div class="desc">' + r.desc + '</div>' +
+        '<div class="state"><span class="chip ' + r.state + '">' + STATE_LABEL[r.state] + ' ' + r.label + '</span></div>' +
+        '</div>';
+    }).join('');
+  }
+
+  function renderTimeline(snaps){
+    document.getElementById('timeline').innerHTML = snaps.map(function(s, i){
+      return '<div class="t-entry' + (i === 0 ? ' is-latest' : '') + '">' +
+        '<div class="t-head"><span class="t-date">' + s.date + '</span><span class="t-source">' + (s.source || '') + '</span></div>' +
+        '<div class="t-note">' + (s.changeNote || '') + '</div>' +
+        '<div class="t-summary">' +
+          '<span><b>' + s.summary.done + '</b> Done·Dev</span>' +
+          '<span><b>' + s.summary.progress + '</b> en progreso</span>' +
+          '<span><b>' + s.summary.backlog + '</b> backlog</span>' +
+          '<span>HU <b>' + s.summary.huDone + '/' + s.summary.huTotal + '</b></span>' +
+        '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  renderMatrix(SNAPSHOTS[0]);
+  renderInfra(SNAPSHOTS[0]);
+  renderTimeline(SNAPSHOTS);
+</script>
+</body>
+</html>
