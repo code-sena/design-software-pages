@@ -256,10 +256,10 @@
   </header>
 
   <div class="stats">
-    <div class="stat"><div class="n done">2/10</div><div class="l">Micros Done·Dev</div></div>
-    <div class="stat"><div class="n progress">1/10</div><div class="l">Micros en progreso</div></div>
+    <div class="stat"><div class="n done">1/10</div><div class="l">Micros Done·Dev</div></div>
+    <div class="stat"><div class="n progress">2/10</div><div class="l">Micros en progreso</div></div>
     <div class="stat"><div class="n backlog">7/10</div><div class="l">Micros en backlog (API/front)</div></div>
-    <div class="stat"><div class="n">20/30</div><div class="l">HU cerradas</div></div>
+    <div class="stat"><div class="n">12/30</div><div class="l">HU cerradas</div></div>
   </div>
 
   <div class="legend">
@@ -382,6 +382,36 @@
   var STATE_LABEL = { done:'✓', progress:'◐', backlog:'○', na:'—' };
 
   var SNAPSHOTS = [
+    {
+      date: '2026-09-09',
+      source: 'GitHub Project #3 (board real, GraphQL)',
+      changeNote: 'Corrección: el board real (Project #3) muestra las 9 tareas de notification (8 HU + épica) en "In Progress", no "Done" como reportaba STATUS.md — 0/8 HU cerradas realmente, no 8/8. Sigue vigente la corrección anterior de BD (10/10 esquemas completos).',
+      summary: { done: 1, progress: 2, backlog: 7, huDone: 12, huTotal: 30 },
+      micros: [
+        { id:'01', name:'iam', stack:'Java', epic:'EP-IAM-01', bd:'done', api:'done', front:'backlog', hu:'12 / 12', huNote:'', env:'Done·Dev', envState:'top' },
+        { id:'02', name:'notification', stack:'Go', epic:'EP-NOTIF-01', bd:'done', api:'progress', front:'na', hu:'0 / 8', huNote:'(9 In Progress en el board)', env:'dev (in progress)', envState:'plain' },
+        { id:'03', name:'monitoring', stack:'Python', epic:'EP-MON-01', bd:'done', api:'progress', front:'backlog', hu:'2 / 10', huNote:'(F2+F3 ✓)', env:'dev (prep)', envState:'plain' },
+        { id:'04', name:'reference-data', stack:'Go', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'05', name:'academic-management', stack:'Java', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'06', name:'training-environment', stack:'Go', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'07', name:'scheduling', stack:'Java', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'08', name:'actors', stack:'Java', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'09', name:'document', stack:'Python', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' },
+        { id:'10', name:'audit', stack:'Go', epic:'—', bd:'done', api:'backlog', front:'backlog', hu:'0', huNote:'', env:'—', envState:'none' }
+      ],
+      infra: [
+        { name:'docs', desc:'Fuente de verdad documental (solo main)', state:'done', label:'activo' },
+        { name:'hu-log', desc:'Registro de HU del macroproyecto', state:'done', label:'activo' },
+        { name:'shared-contracts', desc:'Contratos OpenAPI + esquema de eventos, versionado build-time', state:'progress', label:'en uso' },
+        { name:'docker-infra', desc:'Infra local: perfiles compose + observabilidad + BD compartida', state:'progress', label:'en uso' },
+        { name:'mockup', desc:'Mockup navegable UX/UI, prototipo desechable (SDD) — este mismo portal', state:'progress', label:'parcial' },
+        { name:'design-system', desc:'Tokens + componentes visuales compartidos del front', state:'backlog', label:'scaffold' },
+        { name:'frontend-platform', desc:'auth-client · http-client · event-bus · config (Module Federation)', state:'backlog', label:'scaffold' },
+        { name:'web-shell / web-bff', desc:'Host web + agregación BFF para el frontend web', state:'backlog', label:'scaffold' },
+        { name:'mobile-shell / mobile-bff', desc:'Host mobile + agregación BFF para el frontend móvil', state:'backlog', label:'scaffold' },
+        { name:'e2e', desc:'Integración + E2E + seed orquestado cross-servicio', state:'backlog', label:'scaffold' }
+      ]
+    },
     {
       date: '2026-09-09',
       source: 'GitHub (repos -db) + STATUS.md',
